@@ -1,0 +1,5 @@
+Locate the following entries in the default dovecot-sql.conf.ext file and change them to
+read as follows:
+
+    password_query = SELECT username AS user, password FROM virtual_users WHERE username = '%n'
+    iterate_query = SELECT username AS user FROM virtual_users ORDER BY username;

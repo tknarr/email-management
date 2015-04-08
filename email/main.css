@@ -1,0 +1,64 @@
+@CHARSET "UTF-8";
+/*
+    Copyright 2015 Todd Knarr
+    Licensed under the terms of the GPL v3.0
+*/
+
+body {
+        background-color: #eeeeee;
+        color: #000033;
+        font-family: "Trebuchet MS", "Arial", sans-serif;
+        font-size: 1em;
+        font-weight: normal;
+}
+
+a {
+        background-color: #eeeeee;
+        color: #003366;
+        text-decoration: none;
+}
+
+a:visited {
+        color: #336699;
+}
+
+a:hover {
+        color: #cd0a0a;
+}
+
+a:active {
+        color: #cd0a0a;
+}
+
+a:focus {
+        color: #cd0a0a;
+}
+
+h1.centered {
+        text-align: center;
+}
+
+table {
+        border-collapse: collapse;
+}
+
+table, th, td {
+        border: 1px solid black;
+}
+
+th, td {
+        padding: 5px;
+}
+
+th {
+        background-color: #d3d3d3;
+}
+
+table.centered {
+        margin: auto;
+}
+
+th.centered, td.centered {
+        text-align: center;
+}
+

@@ -1,0 +1,16 @@
+# System aliases
+mailer-daemon: postmaster
+postmaster: root
+nobody: root
+hostmaster: root
+usenet: root
+news: root
+webmaster: root
+www: root
+ftp: root
+abuse: root
+noc: root
+security: root
+
+# Redirect root e-mail to me
+root: myusername
