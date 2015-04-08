@@ -34,7 +34,11 @@ a:focus {
         color: #cd0a0a;
 }
 
-h1.centered {
+h1.page_title {
+        text-align: center;
+}
+
+p.message {
         text-align: center;
 }
 
@@ -54,11 +58,43 @@ th {
         background-color: #d3d3d3;
 }
 
-table.centered {
+table.index {
         margin: auto;
 }
 
-th.centered, td.centered {
+th.index, td.index {
         text-align: center;
+}
+
+table.listing {
+        margin: auto;
+}
+
+th.listing {
+        text-align: left;
+}
+
+td.listing {
+        text-align: left;
+}
+
+table.entry {
+        margin: auto;
+}
+
+th.entry {
+        text-align: left;
+}
+
+td.entry_label {
+        text-align: right;
+}
+
+td.entry_value {
+        text-align: left;
+}
+
+td.buttons {
+        text-align: left;
 }
 

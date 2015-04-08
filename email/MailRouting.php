@@ -18,7 +18,7 @@ else
     $title = "E-mail routing";
 }
 
-echo "<title>".$title."</title>";
+echo "<title>".$title."</title>".PHP_EOL;
 ?>
 <link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
 </head>
@@ -233,14 +233,14 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 ?>
 
 <body>
-<?php echo "    <h1>".$title."</h1>";?>
+<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL;?>
 
     <p>
-        <table>
+        <table class="listing">
             <tr>
-                <th>Addressee user</th>
-                <th>Addressee domain</th>
-                <th>Recipient</th>
+                <th class="listing">Addressee user</th>
+                <th class="listing">Addressee domain</th>
+                <th class="listing">Recipient</th>
             </tr>
 <?php
     function ttk_output_entries( $q )
@@ -251,7 +251,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
             $user = $cols[ 'address_user' ];
             $domain = $cols[ 'address_domain' ];
             $recipient = $cols[ 'recipient' ];
-            echo "            <tr><td>".htmlspecialchars( $user )."</td><td>".htmlspecialchars( $domain )."</td><td>".htmlspecialchars( $recipient )."</td></tr>";
+            echo "            <tr><td class=\"listing\">".htmlspecialchars( $user )."</td><td class=\"listing\">".htmlspecialchars( $domain )."</td><td class=\"listing\">".htmlspecialchars( $recipient )."</td></tr>";
         }
     }
 
@@ -282,25 +282,25 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 
     <p>
         <form method="POST" action="MailRouting.php">
-            <table>
+            <table class="entry">
                 <tr>
-                    <td align="right">Addressee user:</td>
-                    <td><input type="text" name="user" value="" size="50" /></td>
+                    <td class="entry_label">Addressee user:</td>
+                    <td class="entry_value"><input type="text" name="user" value="" size="50" /></td>
                 </tr>
                 <tr>
-                    <td align="right">Addressee domain:</td>
-                    <td><input type="text" name="domain" value="" size="50" /></td>
+                    <td class="entry_label">Addressee domain:</td>
+                    <td class="entry_value"><input type="text" name="domain" value="" size="50" /></td>
                 </tr>
                 <tr>
-                    <td align="right">Recipient:</td>
-                    <td><input type="text" name="recipient" value="" size="50" /></td>
+                    <td class="entry_label">Recipient:</td>
+                    <td class="entry_value"><input type="text" name="recipient" value="" size="50" /></td>
                 </tr>
                 <tr>
-                    <td align="right">Administrative Password:</td>
-                    <td><input type="password" name="apassword" value="" size="50" /></td>
+                    <td class="entry_label">Administrative Password:</td>
+                    <td class="entry_value"><input type="password" name="apassword" value="" size="50" /></td>
                 </tr>
                 <tr>
-                    <td>
+                    <td class="buttons">
                         <input type="submit" name="add" value="Add" />
                         <input type="submit" name="delete" value="Delete" />
                         <input type="submit" name="update" value="Update" />
@@ -309,6 +309,6 @@ mysqli_commit( $link ) or die( "Database commit failed." );
             </table>
         </form>
     </p>
-<?php if ( $msg != "" ) echo "    <p>".$msg."</p>"; ?>
+<?php if ( $msg != "" ) echo "    <p class=\"message\">".$msg."</p>".PHP_EOL; ?>
 </body>
 </html>

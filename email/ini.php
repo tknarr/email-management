@@ -7,7 +7,7 @@ $ini_file = parse_ini_file( "/etc/email_management.ini" ) or die( "Error reading
 $org = $ini_file ["organization"];
 if ( empty( $org ) )
 {
-    $org = $_ENV ["ORGANIZATION"];
+    $org = $_ENV["ORGANIZATION"];
 }
 // Get database connection settings from config file
 $db_host = $ini_file ["host"];

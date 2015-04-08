@@ -18,26 +18,26 @@ else
     $title = "E-mail system administration";
 }
 
-echo "<title>".$title."</title>";
+echo "<title>".$title."</title>".PHP_EOL;
 ?>
 <link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
 </head>
 <body>
 
-<?php echo "    <h1 class=\"centered\">".$title."</h1>";?>
+<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL;?>
     
-    <table class="centered">
+    <table class="index">
         <tr>
-            <td class="centered"><a href="UserMaintenance.php">User account maintenance</a></td>
+            <td class="index"><a href="UserMaintenance.php">User account maintenance</a></td>
         </tr>
         <tr>
-            <td class="centered"><a href="MailRouting.php">Mail routing entry management</a></td>
+            <td class="index"><a href="MailRouting.php">Mail routing entry management</a></td>
         </tr>
         <tr>
-            <td class="centered"><a href="VirtualDomains.php">Virtual domain management</a></td>
+            <td class="index"><a href="VirtualDomains.php">Virtual domain management</a></td>
         </tr>
         <tr>
-            <td class="centered"><a href="ChangePassword.php">Password change form</a></td>
+            <td class="index"><a href="ChangePassword.php">Password change form</a></td>
         </tr>
     </table>
 

@@ -18,17 +18,17 @@ else
     $title = "E-mail user links";
 }
 
-echo "<title>".$title."</title>";
+echo "<title>".$title."</title>".PHP_EOL;
 ?>
 <link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
 </head>
 <body>
 
-<?php echo "    <h1 class=\"centered\">".$title."</h1>";?>
+<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL;?>
 
-    <table class="centered">
+    <table class="index">
         <tr>
-            <td><a href="ChangePassword.php">Change user's e-mail password</a></td>
+            <td class="index"><a href="ChangePassword.php">Change user's e-mail password</a></td>
         </tr>
     </table>
 

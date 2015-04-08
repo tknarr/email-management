@@ -19,7 +19,7 @@ else
     $title = "E-mail user maintenance";
 }
 
-echo "<title>".$title."</title>";
+echo "<title>".$title."</title>".PHP_EOL;
 ?>
 <link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
 </head>
@@ -211,11 +211,11 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 ?>
 
 <body>
-<?php echo "    <h1>".$title."</h1>";?>
+<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL;?>
 
     <p>
-        <table>
-            <tr><th>Username</th><th>Change attempts</th></tr>
+        <table class="listing">
+            <tr><th class="listing">Username</th><th class="listing">Change attempts</th></tr>
 <?php
     // Scan the domains table in sorted order
     $query = mysqli_query( $link, "SELECT username, change_attempts FROM virtual_users ORDER BY username" ) or
@@ -228,7 +228,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
         $change_attempts = $cols[ 'change_attempts' ];
         if ( $username != "" )
         {
-            echo "            <tr><td>".htmlspecialchars( $username )."</td><td>".$change_attempts."</td></tr>";
+            echo "            <tr><td class=\"listing\">".htmlspecialchars( $username )."</td><td class=\"listing\">".$change_attempts."</td></tr>";
         }
     }
     mysqli_free_result( $query );
@@ -238,29 +238,29 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 
     <p>
         <form method="POST" action="AddUser.php">
-            <table>
+            <table class="entry">
                 <tr>
-                    <td align="right">Username:</td>
-                    <td><input type="text" name="username" value="" size="50" /></td>
+                    <td class="entry_label">Username:</td>
+                    <td class="entry_value"><input type="text" name="username" value="" size="50" /></td>
                 </tr>
                 <tr>
-                    <td align="right">Password:</td>
-                    <td><input type="password" name="npassword" value="" size="50" /></td>
+                    <td class="entry_label">Password:</td>
+                    <td class="entry_value"><input type="password" name="npassword" value="" size="50" /></td>
                 </tr>
                 <tr>
-                    <td align="right">Repeat Password:</td>
-                    <td><input type="password" name="rpassword" value="" size="50" /></td>
+                    <td class="entry_label">Repeat Password:</td>
+                    <td class="entry_value"><input type="password" name="rpassword" value="" size="50" /></td>
                 </tr>
                 <tr>
-                    <td align="right">All domains?</td>
-                    <td><input type="checkbox" name="alldomains" value="yes" /></td>
+                    <td class="entry_label">All domains?</td>
+                    <td class="entry_value"><input type="checkbox" name="alldomains" /></td>
                 </tr>
                 <tr>
-                    <td align="right">Administrative Password:</td>
-                    <td><input type="password" name="apassword" value="" size="50" /></td>
+                    <td class="entry_label">Administrative Password:</td>
+                    <td class="entry_value"><input type="password" name="apassword" value="" size="50" /></td>
                 </tr>
                 <tr>
-                    <td>
+                    <td class="buttons">
                         <input type="submit" name="add" value="Add User" />
                         <input type="submit" name="delete" value="Delete User" />
                     </td>
@@ -268,6 +268,6 @@ mysqli_commit( $link ) or die( "Database commit failed." );
             </table>
         </form>
     </p>
-<?php if ( $msg != "" ) echo "    <p>".$msg."</p>"; ?>
+<?php if ( $msg != "" ) echo "    <p class=\"message\">".$msg."</p>".PHP_EOL; ?>
 </body>
 </html>

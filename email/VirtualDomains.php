@@ -18,7 +18,7 @@ else
     $title = "E-mail virtual domains";
 }
 
-echo "<title>".$title."</title>";
+echo "<title>".$title."</title>".PHP_EOL;
 ?>
 <link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
 </head>
@@ -179,11 +179,11 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 ?>
 
 <body>
-<?php echo "    <h1>".$title."</h1>";?>
+<?php echo "    <h1>".$title."</h1>".PHP_EOL;?>
 
     <p>
-        <table>
-            <tr><th>Domain name</th><th>Default user</th></tr>
+        <table class="listing">
+            <tr><th class="listing">Domain name</th><th class="listing">Default user</th></tr>
 <?php
     $wildcard_user = '-';
     $query3 = mysqli_query( $link, "SELECT recipient FROM virtual_aliases WHERE address_user = '*' AND address_domain = '*'" ) or
@@ -212,7 +212,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
                 $default_user = $cols2[ 'recipient' ];
             }
             mysqli_free_result( $query2 );
-            echo "            <tr><td>".htmlspecialchars( $domain )."</td><td>".htmlspecialchars( $default_user )."</td></tr>";
+            echo "            <tr><td class=\"listing\">".htmlspecialchars( $domain )."</td><td class=\"listing\">".htmlspecialchars( $default_user )."</td></tr>";
         }
     }
     mysqli_free_result( $query );
@@ -222,25 +222,25 @@ mysqli_commit( $link ) or die( "Database commit failed." );
     
     <p>
         <form method="POST" action="VirtualDomains.php">
-            <table>
+            <table class="entry">
                 <tr>
-                    <td align="right">Domain:</td>
-                    <td><input type="text" name="domain" value="" size="50" /></td>
+                    <td class="entry_label">Domain:</td>
+                    <td class="entry_value"><input type="text" name="domain" value="" size="50" /></td>
                 </tr>
                 <tr>
-                    <td align="right">Default user:</td>
-                    <td><input type="text" name="defaultuser" value="" size="50" /></td>
+                    <td class="entry_label">Default user:</td>
+                    <td class="entry_value"><input type="text" name="defaultuser" value="" size="50" /></td>
                 </tr>
                 <tr>
-                    <td align="right">Administrative Password:</td>
-                    <td><input type="password" name="apassword" value="" size="50" /></td>
+                    <td class="entry_label">Administrative Password:</td>
+                    <td class="entry_value"><input type="password" name="apassword" value="" size="50" /></td>
                 </tr>
                 <tr>
-                    <td><input type="submit" name="add" value="Add Domain" /> <input type="submit" name="delete" value="Delete Domain" /></td>
+                    <td class="buttons"><input type="submit" name="add" value="Add Domain" /> <input type="submit" name="delete" value="Delete Domain" /></td>
                 </tr>
             </table>
         </form>
     </p>
-<?php if ( $msg != "" ) echo "    <p>".$msg."</p>"; ?>
+<?php if ( $msg != "" ) echo "    <p class=\"message\">".$msg."</p>".PHP_EOL; ?>
 </body>
 </html>

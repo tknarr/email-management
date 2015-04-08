@@ -49,3 +49,8 @@ The "etc" folder has the configuration files you'll need and reflects the tree b
 at /etc in the system. Some files, rather than being complete config files, are instructions
 on how to alter the default configuration files to reflect the correct settings for this
 system.
+
+To change the general appearance, you can mostly just edit the main.css stylesheet. I use
+logical rather than functional class names, so the centered page titles are done using
+class "page_title" rather than class "centered".
+

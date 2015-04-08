@@ -18,7 +18,7 @@ else
     $title = "E-mail user password change";
 }
 
-echo "<title>".$title."</title>";
+echo "<title>".$title."</title>".PHP_EOL;
 ?>
 <link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
 </head>
@@ -111,33 +111,33 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
 
 <body>
 
-<?php echo "    <h1>".$title."</h1>";?>
+<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL;?>
 
     <p>
         <form method="POST" action="ChangePassword.php">
-            <table>
+            <table class="entry">
                 <tr>
-                    <td align="right">Username:</td>
-                    <td><input type="text" name="username" value="" size="50" /></td>
+                    <td class="entry_label">Username:</td>
+                    <td class="entry_value"><input type="text" name="username" value="" size="50" /></td>
                 </tr>
                 <tr>
-                    <td align="right">Current Password:</td>
-                    <td><input type="password" name="password" value="" size="50" /></td>
+                    <td class="entry_label">Current Password:</td>
+                    <td class="entry_value"><input type="password" name="password" value="" size="50" /></td>
                 </tr>
                 <tr>
-                    <td align="right">New Password:</td>
-                    <td><input type="password" name="npassword" value="" size="50" /></td>
+                    <td class="entry_label">New Password:</td>
+                    <td class="entry_value"><input type="password" name="npassword" value="" size="50" /></td>
                 </tr>
                 <tr>
-                    <td align="right">Repeat New Password:</td>
-                    <td><input type="password" name="rpassword" value="" size="50" /></td>
+                    <td class="entry_label">Repeat New Password:</td>
+                    <td class="entry_value"><input type="password" name="rpassword" value="" size="50" /></td>
                 </tr>
                 <tr>
-                    <td><input type="submit" name="submit" value="Change Password" /></td>
+                    <td class="buttons"><input type="submit" name="submit" value="Change Password" /></td>
                 </tr>
             </table>
         </form>
     </p>
-<?php if ( $msg != "" ) echo "    <p>".$msg."</p>"; ?>
+<?php if ( $msg != "" ) echo "    <p class=\"message\">".$msg."</p>".PHP_EOL; ?>
 </body>
 </html>
