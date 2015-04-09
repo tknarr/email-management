@@ -179,7 +179,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 ?>
 
 <body>
-<?php echo "    <h1>".$title."</h1>".PHP_EOL;?>
+<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL;?>
 
     <p>
         <table class="listing">
