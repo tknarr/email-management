@@ -200,9 +200,9 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             mysqli_free_result( $query );
             
             // Validate that requires the database
-            if ( $numrows != 0 )
+            if ( $numrows == 0 )
             {
-                $msg = "This mail routing entry already exists.";
+                $msg = "This mail routing entry does not exist.";
             }
             else
             {

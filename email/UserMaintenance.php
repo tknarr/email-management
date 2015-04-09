@@ -6,7 +6,6 @@
 <html>
 <head>
 <meta charset="UTF-8" />
-<title>E-mail user maintenance</title>
 <?php
 require 'ini.php';
 
@@ -237,7 +236,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
     </p>
 
     <p>
-        <form method="POST" action="AddUser.php">
+        <form method="POST" action="UserMaintenance.php">
             <table class="entry">
                 <tr>
                     <td class="entry_label">Username:</td>
