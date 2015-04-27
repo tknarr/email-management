@@ -1,3 +1,4 @@
+<?php require 'ini.php' ?>
 <!DOCTYPE html>
 <!--
     Copyright 2015 Todd Knarr
@@ -7,8 +8,6 @@
 <head>
 <meta charset="UTF-8" />
 <?php
-require 'ini.php';
-
 if ( !empty( $org ) )
 {
     $title = htmlspecialchars( $org." e-mail user links" );
@@ -24,13 +23,18 @@ echo "<title>".$title."</title>".PHP_EOL;
 </head>
 <body>
 
-<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL;?>
+<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL; ?>
 
-    <table class="index">
-        <tr>
-            <td class="index"><a href="ChangePassword.php">Change user's e-mail password</a></td>
-        </tr>
-    </table>
+    <p>
+        <table class="index">
+            <tr>
+                <td class="index"><a href="ChangePassword.php">Change user's e-mail password</a></td>
+            </tr>
+            <tr>
+                <td class="index"><a href="admin.php">Admin links</a></td>
+            </tr>
+        </table>
+    </p>
 
 </body>
 </html>

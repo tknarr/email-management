@@ -8,7 +8,6 @@ body {
         background-color: #eeeeee;
         color: #000033;
         font-family: "Trebuchet MS", "Arial", sans-serif;
-        font-size: 1em;
         font-weight: normal;
 }
 
@@ -42,6 +41,10 @@ p.message {
         text-align: center;
 }
 
+p.footer {
+        text-align: center;
+}
+
 table {
         border-collapse: collapse;
 }
@@ -67,19 +70,61 @@ th.index, td.index {
 }
 
 table.listing {
-        margin: auto;
+        margin: 0 auto;
 }
 
 th.listing {
         text-align: left;
 }
 
+th.listing_extra {
+        text-align: left;
+        border-style: hidden hidden hidden none;
+        background-color: initial;
+}
+
 td.listing {
         text-align: left;
 }
 
-table.entry {
+td.listing_extra {
+        text-align: left;
+        border-style: hidden hidden hidden none;
+}
+
+td.listing_sys {
+        text-align: left;
+}
+
+td.listing_syserror {
+        text-align: left;
+        color: #cd0a0a;
+        font-style: italic;
+}
+
+table.container {
         margin: auto;
+}
+
+table.container, th.container, td.container {
+        border: none
+}
+
+th.container, td.container {
+        background-color: initial;
+        padding: 1px 10px;
+}
+
+td.container {
+        vertical-align: top;
+}
+
+.wildcard {
+        color: #cd0a0a;
+}
+
+table.entry {
+        margin: 0 auto;
 }
 
 th.entry {

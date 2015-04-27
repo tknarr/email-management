@@ -1,3 +1,4 @@
+<?php require 'ini.php' ?>
 <!DOCTYPE html>
 <!--
     Copyright 2015 Todd Knarr
@@ -7,8 +8,6 @@
 <head>
 <meta charset="UTF-8" />
 <?php
-require 'ini.php';
-
 if ( !empty( $org ) )
 {
     $title = htmlspecialchars( $org." e-mail user password change" );
@@ -24,13 +23,23 @@ echo "<title>".$title."</title>".PHP_EOL;
 </head>
 
 <?php
+if ( $_SERVER[ 'REQUEST_METHOD' ] == "GET" )
+{
+    $raw_username = $logged_in_user;
+    if ( isset( $_GET[ 'u' ] ) )
+    {
+        $u = $_GET[ 'u' ];
+        $raw_username = filter_var( $u, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH );
+    }
+}
 // Check to see if the form has been submitted
-if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
+if ( $_SERVER [ 'REQUEST_METHOD' ] == "POST" )
 {
     if ( $_POST[ 'submit' ] )
     {
         // Raw username, we'll escape it later
-        $raw_username = $_POST[ 'username' ];
+        $u = $_POST[ 'username' ];
+        $raw_username = filter_var( $u, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH );
         // Collect the old and new password fields
         // We'll encode these later after we've done our pre-hashing checks
         $password = $_POST[ 'password' ];
@@ -52,10 +61,6 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         }
         else
         {
-            // Connect to the database
-            $link = mysqli_connect( $db_host, $db_user, $db_password, $db_database ) or die( mysqli_connect_error() );
-            mysqli_autocommit( $link, TRUE );
-    
             // Query the database to find which user we're working with
             $username = mysqli_real_escape_string( $link, $raw_username );
             $query = mysqli_query( $link, "SELECT username, password, change_attempts FROM virtual_users WHERE username = '$username'" ) or
@@ -111,14 +116,14 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
 
 <body>
 
-<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL;?>
+<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL; ?>
 
     <p>
         <form method="POST" action="ChangePassword.php">
             <table class="entry">
                 <tr>
                     <td class="entry_label">Username:</td>
-                    <td class="entry_value"><input type="text" name="username" value="" size="50" /></td>
+<?php echo "                    <td class=\"entry_value\"><input type=\"text\" name=\"username\" value=\"".htmlspecialchars( $raw_username )."\" size=\"50\" /></td>".PHP_EOL; ?>
                 </tr>
                 <tr>
                     <td class="entry_label">Current Password:</td>
@@ -138,6 +143,10 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             </table>
         </form>
     </p>
+
 <?php if ( $msg != "" ) echo "    <p class=\"message\">".$msg."</p>".PHP_EOL; ?>
+
+    <p class="footer"><a href="admin.php">Return to system administration links</a></p>
+
 </body>
 </html>

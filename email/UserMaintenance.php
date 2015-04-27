@@ -1,3 +1,4 @@
+<?php require 'ini.php' ?>
 <!DOCTYPE html>
 <!--
     Copyright 2015 Todd Knarr
@@ -7,8 +8,6 @@
 <head>
 <meta charset="UTF-8" />
 <?php
-require 'ini.php';
-
 if ( !empty( $org ) )
 {
     $title = htmlspecialchars( $org." e-mail user maintenance" );
@@ -24,28 +23,23 @@ echo "<title>".$title."</title>".PHP_EOL;
 </head>
 
 <?php
-// Administrative username, we'll escape it later
-$raw_admin_username = $ini_file[ "admin_user" ];
-
-// Connect to the database
-$link = mysqli_connect( $db_host, $db_user, $db_password, $db_database ) or die( mysqli_connect_error() );
-mysqli_autocommit( $link, FALSE );
-
 // Check to see if the form has been submitted
 if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
 {
-    if ( $_POST[ 'add' ] )
+    if ( !$logged_in_admin )
+    {
+        $msg = "You are not an administrator.";
+    }
+    elseif ( $_POST[ 'add' ] )
     {
         // Raw new username, we'll escape it later
         $raw_username = $_POST[ 'username' ];
         $all_domains = $_POST[ 'alldomains' ];
         // Collect the old and new password fields
-        $apassword = $_POST[ 'apassword' ]; // Admin password
         $npassword = $_POST[ 'npassword' ];
         $rpassword = $_POST[ 'rpassword' ];
     
-        // Validate the form fields
-        if ( empty( $raw_username ) || empty( $apassword ) || empty( $npassword ) || empty( $rpassword ) )
+        if ( empty( $raw_username ) || empty( $npassword ) || empty( $rpassword ) )
         {
             $msg = "All fields are required.";
         }
@@ -55,11 +49,6 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         }
         else
         {
-            // Query the database to find our admin user's password
-            $admin_username = mysqli_real_escape_string( $link, $raw_admin_username );
-            $query = mysqli_query( $link, "SELECT password, change_attempts FROM virtual_users WHERE username = '$admin_username'" ) or
-                 die( mysqli_error() );
-            $numrows = mysqli_num_rows( $query );
             // Gather database information
             while ( $cols = mysqli_fetch_array( $query ) )
             {
@@ -72,7 +61,6 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             $query = mysqli_query( $link, "SELECT * FROM virtual_users WHERE username = '$username'" ) or die( mysqli_error() );
             $numrows = mysqli_num_rows( $query );
     
-            // Validate that requires the database
             if ( $numrows != 0 )
             {
                 $msg = "This username already exists.";
@@ -84,16 +72,10 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
     
                 // Hash the old and new passwords
                 // This depends on a Linux-type crypt() implementation
-                $hapassword = crypt( $apassword, $admin_password );
                 $hnpassword = crypt( $npassword, $nsalt );
     
                 // Checks that have to be done after hashing passwords
-                if ( $hapassword != $admin_password || $tries >= $max_tries )
-                {
-                    $msg = "The administrative password you entered is incorrect.";
-                    mysqli_query( $link, "UPDATE virtual_users SET change_attempts = change_attempts + 1 where username = '$admin_username'" );
-                }
-                elseif ( substr( $hnpassword, 0, 3 ) != "$6$" )
+                if ( substr( $hnpassword, 0, 3 ) != "$6$" )
                 {
                     $msg = "An error occurred when hashing the new user's password.";
                 }
@@ -102,7 +84,6 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                     $msg = "The new user was successfully added.";
                     mysqli_query( $link, "INSERT INTO virtual_users ( username, password ) VALUES ( '$username', '$hnpassword' )" ) or
                          die( mysqli_error() );
-                    mysqli_query( $link, "UPDATE virtual_users SET change_attempts = 0 WHERE username = '$admin_username'" );
     
                     if ( $all_domains == "yes" )
                     {
@@ -121,45 +102,17 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             }
         }
     }
-    else if ( $_POST[ 'delete' ] )
+    elseif ( $_POST[ 'delete' ] )
     {
-        // Read database connection settings from config file
-        $ini_file = parse_ini_file( "/etc/email_management.ini" ) or die( "Error reading configuration." );
-        $db_host = $ini_file[ "host" ];
-        $db_database = $ini_file[ "dbname" ];
-        $db_user = $ini_file[ "user" ];
-        $db_password = $ini_file[ "password" ];
-        // Administrative username, we'll escape it later
-        $raw_admin_username = $ini_file[ "admin_user" ];
-    
         // Raw new username, we'll escape it later
         $raw_username = $_POST[ 'username' ];
-        // Collect the admin password
-        $apassword = $_POST[ 'apassword' ]; // Admin password
-    
-        // Validate the form fields
+
         if ( empty( $raw_username ) || empty( $apassword ) )
         {
-            $msg = "Username and administrative password are required.";
+            $msg = "Username is required.";
         }
         else
         {
-            // Connect to the database
-            $link = mysqli_connect( $db_host, $db_user, $db_password, $db_database ) or die( mysqli_connect_error() );
-    
-            // Query the database to find our admin user's password
-            $admin_username = mysqli_real_escape_string( $link, $raw_admin_username );
-            $query = mysqli_query( $link, "SELECT password, change_attempts FROM virtual_users WHERE username = '$admin_username'" ) or
-                 die( mysqli_error() );
-            $numrows = mysqli_num_rows( $query );
-            // Gather database information
-            while ( $cols = mysqli_fetch_array( $query ) )
-            {
-                $admin_password = $cols[ 'password' ];
-                $tries = $cols[ 'change_attempts' ];
-            }
-            mysqli_free_result( $query );
-    
             // Query the database to check for the user's existence
             $username = mysqli_real_escape_string( $link, $raw_username );
             $query = mysqli_query( $link, "SELECT * FROM virtual_users WHERE username = '$username'" ) or die( mysqli_error() );
@@ -171,7 +124,6 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             $numrows_domain = mysqli_num_rows( $query );
             mysqli_free_result( $query );
             
-            // Validate that requires the database
             if ( $numrows == 0 )
             {
                 $msg = "This username does not exist.";
@@ -182,26 +134,12 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             }
             else
             {
-                // Hash the admin password
-                // This depends on a Linux-type crypt() implementation
-                $hapassword = crypt( $apassword, $admin_password );
-     
-                // Checks that have to be done after hashing passwords
-                if ( $hapassword != $admin_password || $tries >= $max_tries )
-                {
-                    $msg = "The administrative password you entered is incorrect.";
-                    mysqli_query( $link, "UPDATE virtual_users SET change_attempts = change_attempts + 1 where username = '$admin_username'" );
-                }
-                else
-                {
-                    $msg = "The user was successfully deleted.";
-                    mysqli_query( $link, "DELETE FROM virtual_users WHERE username = '$username'" ) or
-                         die( mysqli_error() );
-                    mysqli_query( $link, "UPDATE virtual_users SET change_attempts = 0 WHERE username = '$admin_username'" );
+                $msg = "The user was successfully deleted.";
+                mysqli_query( $link, "DELETE FROM virtual_users WHERE username = '$username'" ) or
+                     die( mysqli_error() );
     
-                    // When deleting a user, delete any mail routing entries that specify them
-                    mysqli_query( $link, "DELETE FROM virtual_aliases WHERE recipient = '$username'" ) or die( mysqli_error() );
-                }
+                // When deleting a user, delete any mail routing entries that specify them
+                mysqli_query( $link, "DELETE FROM virtual_aliases WHERE recipient = '$username'" ) or die( mysqli_error() );
             }
         }
     }
@@ -214,7 +152,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 
     <p>
         <table class="listing">
-            <tr><th class="listing">Username</th><th class="listing">Change attempts</th></tr>
+            <tr><th class="listing">Username</th><th class="listing">Change attempts</th><th class="listing_extra">&nbsp;</th></tr>
 <?php
     // Scan the domains table in sorted order
     $query = mysqli_query( $link, "SELECT username, change_attempts FROM virtual_users ORDER BY username" ) or
@@ -227,7 +165,9 @@ mysqli_commit( $link ) or die( "Database commit failed." );
         $change_attempts = $cols[ 'change_attempts' ];
         if ( $username != "" )
         {
-            echo "            <tr><td class=\"listing\">".htmlspecialchars( $username )."</td><td class=\"listing\">".$change_attempts."</td></tr>";
+            $rlink = "<a href=\"MailRouting.php?u=".urlencode( $username )."\">".htmlspecialchars( $username )."</a>";
+            $pwlink = "<a href=\"ChangePassword.php?u=".urlencode( $username )."\">PW Change</a>";
+            echo "            <tr><td class=\"listing\">".$rlink."</td><td class=\"listing\">".$change_attempts."</td><td class=\"listing_extra\">".$pwlink."</td></tr>";
         }
     }
     mysqli_free_result( $query );
@@ -255,10 +195,6 @@ mysqli_commit( $link ) or die( "Database commit failed." );
                     <td class="entry_value"><input type="checkbox" name="alldomains" /></td>
                 </tr>
                 <tr>
-                    <td class="entry_label">Administrative Password:</td>
-                    <td class="entry_value"><input type="password" name="apassword" value="" size="50" /></td>
-                </tr>
-                <tr>
                     <td class="buttons">
                         <input type="submit" name="add" value="Add User" />
                         <input type="submit" name="delete" value="Delete User" />
@@ -267,6 +203,10 @@ mysqli_commit( $link ) or die( "Database commit failed." );
             </table>
         </form>
     </p>
+
 <?php if ( $msg != "" ) echo "    <p class=\"message\">".$msg."</p>".PHP_EOL; ?>
+
+    <p class="footer"><a href="admin.php">Return to system administration links</a></p>
+
 </body>
 </html>
