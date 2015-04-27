@@ -5,13 +5,13 @@
 
 CREATE DATABASE email;
 
-CREATE USER 'mailadmin' IDENTIFIED BY 'changeme';
-REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'mailadmin';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE on email.* TO 'mailadmin';
+CREATE USER 'mailadmin'@'127.0.0.1' IDENTIFIED BY 'changeme';
+REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'mailadmin'@'127.0.0.1';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE on email.* TO 'mailadmin'@'127.0.0.1';
 
-CREATE USER 'mailuser' IDENTIFIED BY 'changeme';
-REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'mailuser';
-GRANT SELECT, EXECUTE on email.* TO 'mailuser';
+CREATE USER 'mailuser'@'127.0.0.1' IDENTIFIED BY 'changeme';
+REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'mailuser'@'127.0.0.1';
+GRANT SELECT, EXECUTE on email.* TO 'mailuser'@'127.0.0.1';
 
 USE email;
 
@@ -34,7 +34,7 @@ CREATE TABLE virtual_users (
         change_attempts INT NOT NULL DEFAULT 0
 );
 
-CREATE TABLE virtual_aliases(
+CREATE TABLE virtual_aliases (
         address_user    VARCHAR(50) NOT NULL,
         address_domain  VARCHAR(50) NOT NULL,
         recipient       VARCHAR(50) NOT NULL,
@@ -101,6 +101,6 @@ INSERT INTO virtual_aliases ( address_user, address_domain, recipient ) VALUES
         ( '*',             'example.com', 'myusername' );
 
 INSERT INTO virtual_users ( username, password ) VALUES
-        ( 'root', 'changeme' );
+        ( 'root', ENCRYPT( 'changeme', CONCAT( '$6$', SUBSTRING( SHA( RAND() ), -16 ) ) ) );
 
 COMMIT;
