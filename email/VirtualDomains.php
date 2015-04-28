@@ -43,7 +43,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         }
         else
         {
-            // Query the database to check for the new user's existence
+            // Query the database to check for the new domain's existence
             $domain = mysqli_real_escape_string( $link, $raw_domain );
             $query = mysqli_query( $link, "SELECT * FROM virtual_domains WHERE name = '$domain'" ) or die( mysqli_error() );
             $numrows = mysqli_num_rows( $query );
@@ -89,7 +89,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         }
         else
         {
-            // Query the database to check for the new user's existence
+            // Query the database to check for the domain's existence
             $domain = mysqli_real_escape_string( $link, $raw_domain );
             $query = mysqli_query( $link, "SELECT * FROM virtual_domains WHERE name = '$domain'" ) or die( mysqli_error() );
             $numrows = mysqli_num_rows( $query );
@@ -107,6 +107,49 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
     
                 // Delete all mail routing entries for the domain, if any
                 mysqli_query( $link, "DELETE FROM virtual_aliases WHERE address_domain = '$domain'" );
+            }
+        }
+    }
+    elseif ( $_POST[ 'update' ] )
+    {
+        // Raw new username, we'll escape it later
+        $raw_domain = $_POST[ 'domain' ];
+        $raw_default_user = $_POST[ 'defaultuser' ];
+        
+        // Validate the form fields
+        if ( empty( $raw_domain ) )
+        {
+            $msg = "Domain not specified.";
+        }
+        elseif ( empty( $raw_default_user ) )
+        {
+            $msg = "If you want to remove the default user, use the dash ('-').";
+        }
+        else
+        {
+            // Query the database to check for the domain's existence
+            $domain = mysqli_real_escape_string( $link, $raw_domain );
+            if ( $raw_default_user == '-' )
+                $default_user = '-';
+            else
+                $default_user = mysqli_real_escape_string( $link, $raw_default_user );
+            $query = mysqli_query( $link, "SELECT * FROM virtual_domains WHERE name = '$domain'" ) or die( mysqli_error() );
+            $numrows = mysqli_num_rows( $query );
+            mysqli_free_result( $query );
+    
+            if ( $numrows == 0 )
+            {
+                $msg = "This domain does not exist.";
+            }
+            else
+            {
+                $msg = "The domain default user was successfully updated.";
+                mysqli_query( $link, "UPDATE virtual_domains SET default_user = '$default_user' WHERE name = '$domain'" ) or
+                     die( mysqli_error() );
+
+                // Delete the catch-all routing entry for the domain if removing the default user
+                if ( $default_user == '-' )
+                    mysqli_query( $link, "DELETE FROM virtual_aliases WHERE address_user = '*' AND address_domain = '$domain'" );
             }
         }
     }
@@ -179,8 +222,9 @@ mysqli_commit( $link ) or die( "Database commit failed." );
                 <tr>
                     <td class="buttons">
                         <input type="submit" name="add" value="Add Domain" />
-                        <input type="submit" name="delete" value="Delete Domain" />
-                    </td>
+                        <input type="submit" name="delete" value="Delete Domain" /><br>
+                        <input type="submit" name="update" value="Update Domain" />
+                        </td>
                 </tr>
             </table>
         </form>
