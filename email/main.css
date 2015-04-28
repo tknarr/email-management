@@ -111,8 +111,11 @@ table.container, th.container, td.container {
 }
 
 th.container, td.container {
-        background-color: initial;
         padding: 1px 10px;
+}
+
+th.container {
+        background-color: #eeeeee;
 }
 
 td.container {
