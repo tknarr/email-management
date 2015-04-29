@@ -196,8 +196,8 @@ mysqli_commit( $link ) or die( "Database commit failed." );
                 </tr>
                 <tr>
                     <td class="buttons">
-                        <input type="submit" name="add" value="Add User" />
-                        <input type="submit" name="delete" value="Delete User" />
+                        <input type="submit" name="add" value="Add" />
+                        <input type="submit" name="delete" value="Delete" />
                     </td>
                 </tr>
             </table>

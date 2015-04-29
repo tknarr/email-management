@@ -221,10 +221,10 @@ mysqli_commit( $link ) or die( "Database commit failed." );
                 </tr>
                 <tr>
                     <td class="buttons">
-                        <input type="submit" name="add" value="Add Domain" />
-                        <input type="submit" name="delete" value="Delete Domain" /><br>
-                        <input type="submit" name="update" value="Update Domain" />
-                        </td>
+                        <input type="submit" name="add" value="Add" />
+                        <input type="submit" name="delete" value="Delete" />
+                        <input type="submit" name="update" value="Update" />
+                    </td>
                 </tr>
             </table>
         </form>
