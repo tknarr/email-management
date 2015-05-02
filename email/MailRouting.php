@@ -164,6 +164,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 
         <td class="container">
         <table class="listing">
+            <caption>Mail users</caption>
             <tr>
                 <th class="listing">Addressee user</th>
                 <th class="listing">Addressee domain</th>
@@ -242,6 +243,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
         
         <td class="container">
         <table class="listing">
+            <caption>System aliases</caption>
             <tr>
                 <th class="listing">System user</th>
                 <th class="listing">Target user</th>
