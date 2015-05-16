@@ -185,6 +185,13 @@ mysqli_commit( $link ) or die( "Database commit failed." );
         }
     }
     
+    function cmp_sysentry( $a, $b )
+    {
+        $o_t = strcmp( $a[1], $b[1] );
+        $o_u = strcmp( $a[0], $b[0] );
+        return ( $o_t == 0 ) ? $o_u : $o_t;
+    }
+    
     function ttk_output_sysentry( $u, $r )
     {
         if ( $u && $r )
@@ -250,9 +257,10 @@ mysqli_commit( $link ) or die( "Database commit failed." );
             </tr>
 <?php
     // Now report the system aliases table
+    $alias_list = array();
     $aliases_file = new SplFileObject( "/etc/aliases", "r" );
     $aliases_file->setFlags( SplFileObject::READ_AHEAD | SplFileObject::DROP_NEW_LINE | SplFileObject::SKIP_EMPTY );
-    foreach ( $aliases_file as $rawline)
+    foreach ( $aliases_file as $rawline )
     {
         $line = trim( $rawline );
         if ( strlen( $line ) == 0 || $line[0] == '#' )
@@ -262,10 +270,18 @@ mysqli_commit( $link ) or die( "Database commit failed." );
         {
             $alias_user = trim( $user_entry[0] );
             $alias_target = trim( $user_entry[1] );
-            ttk_output_sysentry( $alias_user, $alias_target );
+            $item = array( $alias_user, $alias_target );
+            $alias_list[] = $item;
         }
     }
     $aliases_file = null;
+    uasort( $alias_list, "cmp_sysentry" );
+    foreach ( $alias_list as $i => $a )
+    {
+        $alias_user = $a[0];
+        $alias_target = $a[1];
+        ttk_output_sysentry( $alias_user, $alias_target );
+    }
 ?>
         </table>
         </td>
