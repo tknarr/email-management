@@ -23,6 +23,20 @@ echo "<title>".$title."</title>".PHP_EOL;
 </head>
 
 <?php
+if ( $_SERVER ['REQUEST_METHOD'] == "GET" )
+{
+    $raw_username = "";
+    if ( isset( $_GET ['reset'] ) )
+    {
+        $u = $_GET ['reset'];
+        $raw_username = filter_var( $u, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH );
+    }
+    if ( !empty( $raw_username ) && $logged_in_admin )
+    {
+        $username = mysqli_real_escape_string( $link, $raw_username );
+        $query = mysqli_query( $link, "UPDATE virtual_users SET change_attempts = 0 WHERE username = '$username'" ) or die( mysqli_error() );
+    }
+}
 // Check to see if the form has been submitted
 if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
 {
@@ -188,8 +202,16 @@ mysqli_commit( $link ) or die( "Database commit failed." );
                 $acct_type = '&nbsp;';
             }
             $rlink = "<a href=\"MailRouting.php?u=".urlencode( $username )."\">".htmlspecialchars( $username )."</a>";
-            $pwlink = "<a href=\"ChangePassword.php?u=".urlencode( $username )."\">PW Change</a>";
-            echo "            <tr><td class=\"listing\">".$rlink."</td><td class=\"listing\">".$acct_type."</td><td class=\"listing\">".$change_attempts."</td><td class=\"listing_extra\">".$pwlink."</td></tr>";
+            $pwlink = "<a href=\"ChangePassword.php?u=".urlencode( $username )."\">Change Password</a>";
+            if ( $logged_in_admin )
+            {
+                $catext = $change_attempts." <a href=\"UserMaintenance.php?reset=".urlencode( $username )."\">Reset</a>";
+            }
+            else
+            {
+                $catext = $change_attempts;
+            }
+            echo "            <tr><td class=\"listing\">".$rlink."</td><td class=\"listing\">".$acct_type."</td><td class=\"listing_right\">".$catext."</td><td class=\"listing_extra\">".$pwlink."</td></tr>";
         }
     }
     mysqli_free_result( $query );

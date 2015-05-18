@@ -97,6 +97,10 @@ td.listing {
         text-align: left;
 }
 
+td.listing_right {
+        text-align: right;
+}
+
 td.listing_extra {
         text-align: left;
         border-style: hidden hidden hidden none;
