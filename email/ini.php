@@ -40,7 +40,7 @@ $msg = "";
 // Returns true if user's password validates, false if it doesn't.
 function validate_user( $l, $u, $p, $mt )
 {
-    // Query the database to find our admin user's password
+    // Query the database to find the user's password
     $u_esc = mysqli_real_escape_string( $l, $u );
     $query = mysqli_query( $l, "SELECT password, change_attempts FROM virtual_users WHERE username = '$u_esc'" ) or
                      die( mysqli_error() );

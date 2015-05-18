@@ -35,6 +35,8 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         // Raw new username, we'll escape it later
         $raw_username = $_POST[ 'username' ];
         $all_domains = $_POST[ 'alldomains' ];
+        // TODO uncomment when virtual users supported
+        // $virt_user = $_POST[ 'virtualuser' ];
         // Collect the old and new password fields
         $npassword = $_POST[ 'npassword' ];
         $rpassword = $_POST[ 'rpassword' ];
@@ -73,6 +75,13 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                 // Hash the old and new passwords
                 // This depends on a Linux-type crypt() implementation
                 $hnpassword = crypt( $npassword, $nsalt );
+                
+                $accttype = 'S';
+                // TODO uncomment when virtual users are supported
+                // if ( $virt_user == 'yes' )
+                // {
+                //     $accttype = 'V';
+                // }
     
                 // Checks that have to be done after hashing passwords
                 if ( substr( $hnpassword, 0, 3 ) != "$6$" )
@@ -82,7 +91,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                 else
                 {
                     $msg = "The new user was successfully added.";
-                    mysqli_query( $link, "INSERT INTO virtual_users ( username, password ) VALUES ( '$username', '$hnpassword' )" ) or
+                    mysqli_query( $link, "INSERT INTO virtual_users ( username, password, acct_type ) VALUES ( '$username', '$hnpassword', '$accttype' )" ) or
                          die( mysqli_error() );
     
                     if ( $all_domains == "yes" )
@@ -152,22 +161,35 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 
     <p>
         <table class="listing">
-            <tr><th class="listing">Username</th><th class="listing">Change attempts</th><th class="listing_extra">&nbsp;</th></tr>
+            <tr><th class="listing">Username</th><th class="listing">Type</th><th class="listing">Change attempts</th><th class="listing_extra">&nbsp;</th></tr>
 <?php
     // Scan the domains table in sorted order
-    $query = mysqli_query( $link, "SELECT username, change_attempts FROM virtual_users ORDER BY username" ) or
+    $query = mysqli_query( $link, "SELECT username, change_attempts, acct_type FROM virtual_users ORDER BY username" ) or
         die( mysqli_error() );
 
     // Output the body of our table of domains
     while ( $cols = mysqli_fetch_array( $query ) )
     {
         $username = $cols[ 'username' ];
+        $acct_type = $cols[ 'acct_type' ];
         $change_attempts = $cols[ 'change_attempts' ];
         if ( $username != "" )
         {
+            if ( $acct_type == 'S' )
+            {
+                $acct_type = 'Sys';
+            }
+            elseif ( $acct_type == 'V' )
+            {
+                $acct_type = 'Virt';
+            }
+            else
+            {
+                $acct_type = '&nbsp;';
+            }
             $rlink = "<a href=\"MailRouting.php?u=".urlencode( $username )."\">".htmlspecialchars( $username )."</a>";
             $pwlink = "<a href=\"ChangePassword.php?u=".urlencode( $username )."\">PW Change</a>";
-            echo "            <tr><td class=\"listing\">".$rlink."</td><td class=\"listing\">".$change_attempts."</td><td class=\"listing_extra\">".$pwlink."</td></tr>";
+            echo "            <tr><td class=\"listing\">".$rlink."</td><td class=\"listing\">".$acct_type."</td><td class=\"listing\">".$change_attempts."</td><td class=\"listing_extra\">".$pwlink."</td></tr>";
         }
     }
     mysqli_free_result( $query );
@@ -194,6 +216,12 @@ mysqli_commit( $link ) or die( "Database commit failed." );
                     <td class="entry_label">All domains?</td>
                     <td class="entry_value"><input type="checkbox" name="alldomains" /></td>
                 </tr>
+                <!-- TODO uncomment when virtual users supported
+                <tr>
+                    <td class="entry_label">Virtual user?</td>
+                    <td class="entry_value"><input type="checkbox" name="virtualuser" /></td>
+                </tr>
+                -->
                 <tr>
                     <td class="buttons">
                         <input type="submit" name="add" value="Add" />

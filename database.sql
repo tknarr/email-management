@@ -31,7 +31,8 @@ CREATE TABLE virtual_domains (
 CREATE TABLE virtual_users (
         username        VARCHAR(50) NOT NULL PRIMARY KEY,
         password        VARCHAR(200) NOT NULL,
-        change_attempts INT NOT NULL DEFAULT 0
+        change_attempts INT NOT NULL DEFAULT 0,
+        acct_type       CHAR(1) NOT NULL
 );
 
 CREATE TABLE virtual_aliases (
@@ -100,7 +101,7 @@ INSERT INTO virtual_aliases ( address_user, address_domain, recipient ) VALUES
         ( 'myusername',    'example.com', 'myusername' ),
         ( '*',             'example.com', 'myusername' );
 
-INSERT INTO virtual_users ( username, password ) VALUES
-        ( 'root', ENCRYPT( 'changeme', CONCAT( '$6$', SUBSTRING( SHA( RAND() ), -16 ) ) ) );
+INSERT INTO virtual_users ( username, password, acct_type ) VALUES
+        ( 'root', ENCRYPT( 'changeme', CONCAT( '$6$', SUBSTRING( SHA( RAND() ), -16 ) ) ), 'S' );
 
 COMMIT;
