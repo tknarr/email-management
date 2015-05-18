@@ -112,35 +112,6 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             }
         }
     }
-    elseif ( $_POST ['clear'] )
-    {
-        if ( $logged_in_admin )
-        {
-            $u = $_POST ['username'];
-            $raw_username = filter_var( $u, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH );
-            // Query the database to find which user we're working with
-            $username = mysqli_real_escape_string( $link, $raw_username );
-            $query = mysqli_query( $link, "SELECT username FROM virtual_users WHERE username = '$username'" ) or
-                             die( mysqli_error() );
-            $numrows = mysqli_num_rows( $query );
-            
-            // Validation that requires the database
-            if ( $numrows == 0 )
-            {
-                $msg = "This username does not exist.";
-            }
-            else
-            {
-                $msg = "Counter has been reset.";
-                mysqli_query( $link, "UPDATE virtual_users SET change_attempts = 0 WHERE username = '$username'" ) or
-                                 die( mysqli_error() );
-            }
-        }
-        else
-        {
-            $msg = "You are not an administrator.";
-        }
-    }
 }
 ?>
 
@@ -170,9 +141,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                 <td class="entry_value"><input type="password" name="rpassword" value="" size="50" /></td>
             </tr>
             <tr>
-                <td class="buttons"><input type="submit" name="submit" value="Change Password" />
-<?php if ( $logged_in_admin) { echo "                        <input type=\"submit\" name=\"clear\" value=\"Reset counter\" />"; } ?>
-                    </td>
+                <td class="buttons"><input type="submit" name="submit" value="Change Password" /></td>
             </tr>
         </table>
     </form>
