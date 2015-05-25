@@ -1,4 +1,4 @@
-<?php require 'ini.php'?>
+<?php require 'ini.php'; ?>
 <!DOCTYPE html>
 <!--
     Copyright 2015 Todd Knarr

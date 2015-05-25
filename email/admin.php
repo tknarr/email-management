@@ -1,4 +1,4 @@
-<?php require 'ini.php' ?>
+<?php require 'ini.php'; ?>
 <!DOCTYPE html>
 <!--
     Copyright 2015 Todd Knarr
@@ -29,6 +29,9 @@ echo "<title>".$title."</title>".PHP_EOL;
         <table class="index">
             <tr>
                 <td class="index"><a href="UserMaintenance.php">User account maintenance</a></td>
+            </tr>
+            <tr>
+                <td class="index"><a href="PasswdView.php">Passwd view of accounts</a></td>
             </tr>
             <tr>
                 <td class="index"><a href="MailRouting.php">Mail routing entry management</a></td>

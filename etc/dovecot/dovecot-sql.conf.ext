@@ -1,0 +1,17 @@
+# This file is opened as root, so it should be owned by root and mode 0600.
+#
+# http://wiki2.dovecot.org/AuthDatabase/SQL
+#
+# Database driver: mysql, pgsql, sqlite
+driver = mysql
+
+connect = host=127.0.0.1 dbname=email user=mailuser password=mailuserpassword
+
+# Default password scheme.
+default_pass_scheme = SHA512-CRYPT
+
+password_query = SELECT username AS user, password, home AS userdb_home, uid AS userdb_uid, gid AS userdb_gid FROM v_passwd WHERE username = '%n'
+
+user_query = SELECT home, uid, gid FROM v_passwd WHERE username = '%n'
+
+iterate_query = SELECT username AS user FROM virtual_users;

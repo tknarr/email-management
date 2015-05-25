@@ -69,6 +69,7 @@ th, td {
 
 th {
         background-color: #d3d3d3;
+        vertical-align: bottom;
 }
 
 table.index {
@@ -160,3 +161,6 @@ td.buttons {
         text-align: left;
 }
 
+form.buttons {
+        display: inline;
+}

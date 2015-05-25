@@ -9,6 +9,7 @@ if ( empty( $org ) )
 {
     $org = $_ENV ["ORGANIZATION"];
 }
+$default_user_type = strtolower( trim( $ini_file["default_user_type"]) );
 // Get database connection settings from config file
 $db_host = $ini_file ["host"];
 $db_database = $ini_file ["dbname"];
@@ -102,4 +103,6 @@ if ( !isset( $_SERVER ['PHP_AUTH_USER'] ) || !isset( $_SERVER ['PHP_AUTH_PW'] ) 
 // Shorthand variables for username and admin status
 $logged_in_user = $_SERVER ['PHP_AUTH_USER'];
 $logged_in_admin = is_admin( $admin_users, $logged_in_user );
+// Shorthand variable for default user type
+$default_virtual_users = ( $default_user_type == 'virtual' );
 ?>

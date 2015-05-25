@@ -1,4 +1,4 @@
-<?php require 'ini.php' ?>
+<?php require 'ini.php'; ?>
 <!DOCTYPE html>
 <!--
     Copyright 2015 Todd Knarr
@@ -156,7 +156,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 ?>
 
 <body>
-<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL;?>
+<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL; ?>
 
     <p>
         <table class="container">
@@ -181,7 +181,13 @@ mysqli_commit( $link ) or die( "Database commit failed." );
             $recipient = $cols[ 'recipient' ];
             // Only output if no recipient filter or recipient matches filter AND no domain filter or domain matches filter.
             if ( ( !$r || ( $recipient == $r ) ) && ( !$d || ( $domain == $d ) ) )
-                echo "            <tr><td class=\"listing\">".htmlspecialchars( $user )."</td><td class=\"listing\">".htmlspecialchars( $domain )."</td><td class=\"listing\">".htmlspecialchars( $recipient )."</td></tr>".PHP_EOL;
+            {
+                echo "            <tr>".PHP_EOL;
+                echo "              <td class=\"listing\">".htmlspecialchars( $user )."</td>".PHP_EOL;
+                echo "              <td class=\"listing\">".htmlspecialchars( $domain )."</td>".PHP_EOL;
+                echo "              <td class=\"listing\">".htmlspecialchars( $recipient )."</td>".PHP_EOL;
+                echo "            </tr>".PHP_EOL;
+            }
         }
     }
     

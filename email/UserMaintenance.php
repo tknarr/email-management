@@ -1,4 +1,4 @@
-<?php require 'ini.php' ?>
+<?php require 'ini.php'; ?>
 <!DOCTYPE html>
 <!--
     Copyright 2015 Todd Knarr
@@ -49,8 +49,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         // Raw new username, we'll escape it later
         $raw_username = $_POST[ 'username' ];
         $all_domains = $_POST[ 'alldomains' ];
-        // TODO uncomment when virtual users supported
-        // $virt_user = $_POST[ 'virtualuser' ];
+        $virt_user = $_POST[ 'virtualuser' ];
         // Collect the old and new password fields
         $npassword = $_POST[ 'npassword' ];
         $rpassword = $_POST[ 'rpassword' ];
@@ -91,11 +90,15 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                 $hnpassword = crypt( $npassword, $nsalt );
                 
                 $accttype = 'S';
-                // TODO uncomment when virtual users are supported
-                // if ( $virt_user == 'yes' )
-                // {
-                //     $accttype = 'V';
-                // }
+                if ( $username == 'root' )
+                {
+                    $accttype = 'R';
+                }
+                else if ( $virt_user == 'yes' )
+                {
+                    $accttype = 'V';
+                }
+                $msg2 = "vu=".$virt_user." at=".$accttype.PHP_EOL;
     
                 // Checks that have to be done after hashing passwords
                 if ( substr( $hnpassword, 0, 3 ) != "$6$" )
@@ -130,7 +133,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         // Raw new username, we'll escape it later
         $raw_username = $_POST[ 'username' ];
 
-        if ( empty( $raw_username ) || empty( $apassword ) )
+        if ( empty( $raw_username ) )
         {
             $msg = "Username is required.";
         }
@@ -155,6 +158,10 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             {
                 $msg = "User is the default destination for a domain.";
             }
+            else if ( $username == 'root' )
+            {
+                $msg = "Root user must not be deleted.";
+            }
             else
             {
                 $msg = "The user was successfully deleted.";
@@ -171,47 +178,41 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 ?>
 
 <body>
-<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL;?>
+<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL; ?>
 
     <p>
         <table class="listing">
-            <tr><th class="listing">Username</th><th class="listing">Type</th><th class="listing">Change attempts</th><th class="listing_extra">&nbsp;</th></tr>
+            <tr><th class="listing">Username</th><th class="listing">Type</th><th class="listing">Change<br>attempts</th><th class="listing_extra">&nbsp;</th></tr>
 <?php
     // Scan the domains table in sorted order
-    $query = mysqli_query( $link, "SELECT username, change_attempts, acct_type FROM virtual_users ORDER BY username" ) or
+    $query = mysqli_query( $link, "SELECT username, change_attempts, a.abbreviation AS abbreviation FROM virtual_users, acct_types a WHERE acct_type = a.code ORDER BY username" ) or
         die( mysqli_error() );
 
     // Output the body of our table of domains
     while ( $cols = mysqli_fetch_array( $query ) )
     {
         $username = $cols[ 'username' ];
-        $acct_type = $cols[ 'acct_type' ];
+        $acct_type = $cols[ 'abbreviation' ];
         $change_attempts = $cols[ 'change_attempts' ];
         if ( $username != "" )
         {
-            if ( $acct_type == 'S' )
-            {
-                $acct_type = 'Sys';
-            }
-            elseif ( $acct_type == 'V' )
-            {
-                $acct_type = 'Virt';
-            }
-            else
-            {
-                $acct_type = '&nbsp;';
-            }
             $rlink = "<a href=\"MailRouting.php?u=".urlencode( $username )."\">".htmlspecialchars( $username )."</a>";
-            $pwlink = "<a href=\"ChangePassword.php?u=".urlencode( $username )."\">Change Password</a>";
             if ( $logged_in_admin )
             {
-                $catext = $change_attempts." <a href=\"UserMaintenance.php?reset=".urlencode( $username )."\">Reset</a>";
+                $pw_btn = "<button type=\"button\" onclick=\"window.location.assign( &quot;ChangePassword.php?reset=".urlencode( $username )."&quot; )\">Chg Pwd</button>"; 
+                $ca_btn = "<button type=\"button\" onclick=\"window.location.assign( &quot;UserMaintenance.php?reset=".urlencode( $username )."&quot; )\">Reset CAs</button>";
             }
             else
             {
-                $catext = $change_attempts;
+                $pw_btn = "";
+                $ca_btn = "";
             }
-            echo "            <tr><td class=\"listing\">".$rlink."</td><td class=\"listing\">".$acct_type."</td><td class=\"listing_right\">".$catext."</td><td class=\"listing_extra\">".$pwlink."</td></tr>";
+            echo "            <tr>".PHP_EOL;
+            echo "              <td class=\"listing\">".$rlink."</td>".PHP_EOL;
+            echo "              <td class=\"listing\">".$acct_type."</td>".PHP_EOL;
+            echo "              <td class=\"listing_right\">".$change_attempts."</td>".PHP_EOL;
+            echo "              <td class=\"listing_extra\">".$ca_btn." ".$pw_btn."</td>".PHP_EOL;
+            echo "            </tr>".PHP_EOL;
         }
     }
     mysqli_free_result( $query );
@@ -236,14 +237,15 @@ mysqli_commit( $link ) or die( "Database commit failed." );
                 </tr>
                 <tr>
                     <td class="entry_label">All domains?</td>
-                    <td class="entry_value"><input type="checkbox" name="alldomains" /></td>
+                    <td class="entry_value"><input type="checkbox" name="alldomains" value="yes" /></td>
                 </tr>
-                <!-- TODO uncomment when virtual users supported
                 <tr>
                     <td class="entry_label">Virtual user?</td>
-                    <td class="entry_value"><input type="checkbox" name="virtualuser" /></td>
+<?php
+$ckd = $default_virtual_users ? "checked " : "";
+echo "                    <td class=\"entry_value\"><input type=\"checkbox\" name=\"virtualuser\" value=\"yes\" ".$ckd."/></td>".PHP_EOL;
+?>
                 </tr>
-                -->
                 <tr>
                     <td class="buttons">
                         <input type="submit" name="add" value="Add" />
@@ -255,6 +257,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
     </p>
 
 <?php if ( $msg != "" ) echo "    <p class=\"message\">".$msg."</p>".PHP_EOL; ?>
+<?php if ( $msg2 != "" ) echo "    <p class=\"message\">2: ".$msg2."</p>".PHP_EOL; ?>
 
     <p class="footer"><a href="admin.php">Return to system administration links</a></p>
 

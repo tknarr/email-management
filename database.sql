@@ -20,9 +20,20 @@ USE email;
 START TRANSACTION;
 
 DROP FUNCTION IF EXISTS getVirtualAlias;
+DROP VIEW IF EXISTS v_passwd;
 DROP TABLE IF EXISTS virtual_aliases;
 DROP TABLE IF EXISTS virtual_users;
 DROP TABLE IF EXISTS virtual_domains;
+DROP TABLE IF EXISTS acct_types;
+
+CREATE TABLE acct_types (
+        code            CHAR(1) NOT NULL PRIMARY KEY,
+        description     VARCHAR(50),
+        abbreviation    VARCHAR(10),
+        home_root       VARCHAR(50) NOT NULL,
+        uid             VARCHAR(20),
+        gid             VARCHAR(20)
+);
 
 CREATE TABLE virtual_domains (
         name    VARCHAR(50) NOT NULL PRIMARY KEY
@@ -32,7 +43,8 @@ CREATE TABLE virtual_users (
         username        VARCHAR(50) NOT NULL PRIMARY KEY,
         password        VARCHAR(200) NOT NULL,
         change_attempts INT NOT NULL DEFAULT 0,
-        acct_type       CHAR(1) NOT NULL
+        acct_type       CHAR(1) NOT NULL,
+        FOREIGN KEY ( acct_type ) REFERENCES acct_types ( code )
 );
 
 CREATE TABLE virtual_aliases (
@@ -41,6 +53,13 @@ CREATE TABLE virtual_aliases (
         recipient       VARCHAR(50) NOT NULL,
         PRIMARY KEY ( address_user, address_domain )
 );
+
+CREATE SQL SECURITY INVOKER VIEW v_passwd AS
+SELECT u.username AS username, u.password AS password, u.acct_type AS acct_type,
+          IFNULL( a.uid, u.username ) AS uid, IFNULL( a.gid, u.username ) AS gid,
+          CONCAT( a.home_root, u.username) AS home
+        FROM virtual_users u, acct_types a
+        WHERE u.acct_type = a.code;
 
 DELIMITER //
 CREATE FUNCTION getVirtualAlias ( user VARCHAR(50), domain VARCHAR(100) )
@@ -85,6 +104,11 @@ COMMIT;
 
 START TRANSACTION;
 
+INSERT INTO acct_types ( code, description, abbreviation, home_root, uid, gid ) VALUES
+        ( 'R', 'Root', 'Root', '/', NULL, NULL ),
+        ( 'S', 'System user', 'Sys', '/home/', NULL, NULL ),
+        ( 'V', 'Virtual user', '', '/home/vmail/', 'vmail', 'vmail' );
+
 INSERT INTO virtual_domains ( name ) VALUES
         ( 'example.com' );
 
@@ -102,6 +126,6 @@ INSERT INTO virtual_aliases ( address_user, address_domain, recipient ) VALUES
         ( '*',             'example.com', 'myusername' );
 
 INSERT INTO virtual_users ( username, password, acct_type ) VALUES
-        ( 'root', ENCRYPT( 'changeme', CONCAT( '$6$', SUBSTRING( SHA( RAND() ), -16 ) ) ), 'S' );
+        ( 'root', ENCRYPT( 'changeme', CONCAT( '$6$', SUBSTRING( SHA( RAND() ), -16 ) ) ), 'R' );
 
 COMMIT;
