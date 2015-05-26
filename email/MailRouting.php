@@ -64,7 +64,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             // Query the database to check for the new user's existence
             $user = mysqli_real_escape_string( $link, $raw_user );
             $domain = mysqli_real_escape_string( $link, $raw_domain );
-            $query = mysqli_query( $link, "SELECT * FROM virtual_aliases WHERE address_user = '$user' AND address_domain = '$domain'" ) or
+            $query = mysqli_query( $link, "SELECT * FROM mail_routing WHERE address_user = '$user' AND address_domain = '$domain'" ) or
                              die( mysqli_error() );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
@@ -77,7 +77,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             {
                 $recipient = mysqli_real_escape_string( $link, $raw_recipient );
                 $msg = "The new mail routing entry was successfully added.";
-                mysqli_query( $link, "INSERT INTO virtual_aliases ( address_user, address_domain, recipient ) VALUES ( '$user', '$domain', '$recipient' )" ) or
+                mysqli_query( $link, "INSERT INTO mail_routing ( address_user, address_domain, recipient ) VALUES ( '$user', '$domain', '$recipient' )" ) or
                                  die( mysqli_error() );
                 }
         }
@@ -98,7 +98,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             // Query the database to check for the new user's existence
             $user = mysqli_real_escape_string( $link, $raw_user );
             $domain = mysqli_real_escape_string( $link, $raw_domain );
-            $query = mysqli_query( $link, "SELECT * FROM virtual_aliases WHERE user = '$user' AND domain = '$domain'" ) or
+            $query = mysqli_query( $link, "SELECT * FROM mail_routing WHERE user = '$user' AND domain = '$domain'" ) or
                              die( mysqli_error() );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
@@ -110,7 +110,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             else
             {
                 $msg = "The mail routing entry was successfully deleted.";
-                mysqli_query( $link, "DELETE FROM virtual_aliases WHERE user = '$user' AND domain = '$domain'" ) or
+                mysqli_query( $link, "DELETE FROM mail_routing WHERE user = '$user' AND domain = '$domain'" ) or
                                  die( mysqli_error() );
             }
         }
@@ -132,7 +132,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             // Query the database to check for the new user's existence
             $user = mysqli_real_escape_string( $link, $raw_user );
             $domain = mysqli_real_escape_string( $link, $raw_domain );
-            $query = mysqli_query( $link, "SELECT * FROM virtual_aliases WHERE address_user = '$user' AND address_domain = '$domain'" ) or
+            $query = mysqli_query( $link, "SELECT * FROM mail_routing WHERE address_user = '$user' AND address_domain = '$domain'" ) or
                              die( mysqli_error() );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
@@ -145,7 +145,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             {
                 $recipient = mysqli_real_escape_string( $link, $raw_recipient );
                 $msg = "The mail routing entry was successfully updated.";
-                mysqli_query( $link, "UPDATE virtual_aliases SET recipient = '$recipient' WHERE address_user = '$user' AND address_domain = '$domain'" ) or
+                mysqli_query( $link, "UPDATE mail_routing SET recipient = '$recipient' WHERE address_user = '$user' AND address_domain = '$domain'" ) or
                                  die( mysqli_error() );
             }
         }
@@ -231,22 +231,22 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 
     // Scan the domains table in the same order the stored procedure will check them.
     // First non-wildcard entries
-    $query = mysqli_query( $link, "SELECT address_user, address_domain, recipient FROM virtual_aliases WHERE address_user != '*' AND address_domain != '*' ORDER BY address_domain, address_user" ) or
+    $query = mysqli_query( $link, "SELECT address_user, address_domain, recipient FROM mail_routing WHERE address_user != '*' AND address_domain != '*' ORDER BY address_domain, address_user" ) or
         die( mysqli_error() );
     ttk_output_entries( $query, $filter_username, $filter_domain );
     mysqli_free_result( $query );
     // Then entries with a non-wildcard user and a wildcard domain
-    $query = mysqli_query( $link, "SELECT address_user, address_domain, recipient FROM virtual_aliases WHERE address_user != '*' AND address_domain = '*' ORDER BY address_domain, address_user" ) or
+    $query = mysqli_query( $link, "SELECT address_user, address_domain, recipient FROM mail_routing WHERE address_user != '*' AND address_domain = '*' ORDER BY address_domain, address_user" ) or
         die( mysqli_error() );
     ttk_output_entries( $query, $filter_username, '*' );
     mysqli_free_result( $query );
     // Then entries with a wildcard user and a non=wildcard domain
-    $query = mysqli_query( $link, "SELECT address_user, address_domain, recipient FROM virtual_aliases WHERE address_user = '*' AND address_domain != '*' ORDER BY address_domain, address_user" ) or
+    $query = mysqli_query( $link, "SELECT address_user, address_domain, recipient FROM mail_routing WHERE address_user = '*' AND address_domain != '*' ORDER BY address_domain, address_user" ) or
         die( mysqli_error() );
     ttk_output_entries( $query, $filter_username, $filter_domain );
     mysqli_free_result( $query );
     // And finally the all-wildcards entry if any
-    $query = mysqli_query( $link, "SELECT address_user, address_domain, recipient FROM virtual_aliases WHERE address_user = '*' AND address_domain = '*' ORDER BY address_domain, address_user" ) or
+    $query = mysqli_query( $link, "SELECT address_user, address_domain, recipient FROM mail_routing WHERE address_user = '*' AND address_domain = '*' ORDER BY address_domain, address_user" ) or
         die( mysqli_error() );
     ttk_output_entries( $query, $filter_username, '*' );
     mysqli_free_result( $query );

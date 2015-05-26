@@ -10,11 +10,11 @@
 <?php
 if ( !empty( $org ) )
 {
-    $title = htmlspecialchars( $org." e-mail virtual domains" );
+    $title = htmlspecialchars( $org." e-mail hosted domains" );
 }
 else 
 {
-    $title = "E-mail virtual domains";
+    $title = "E-mail hosted domains";
 }
 
 echo "<title>".$title."</title>".PHP_EOL;
@@ -45,7 +45,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         {
             // Query the database to check for the new domain's existence
             $domain = mysqli_real_escape_string( $link, $raw_domain );
-            $query = mysqli_query( $link, "SELECT * FROM virtual_domains WHERE name = '$domain'" ) or die( mysqli_error() );
+            $query = mysqli_query( $link, "SELECT * FROM hosted_domains WHERE name = '$domain'" ) or die( mysqli_error() );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
     
@@ -56,21 +56,21 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             else
             {
                 $msg = "The new domain was successfully added.";
-                mysqli_query( $link, "INSERT INTO virtual_domains ( name ) VALUES ( '$domain' )" ) or
+                mysqli_query( $link, "INSERT INTO hosted_domains ( name ) VALUES ( '$domain' )" ) or
                      die( mysqli_error() );
 
                 if ( !empty( $raw_default_user ) )
                 {
                     // If a default user was given and no default mail routing exists for the domain, add one to that user
                     $default_user =  mysqli_real_escape_string( $link, $raw_default_user );
-                    $query = mysqli_query( $link, "SELECT * FROM virtual_aliases WHERE address_user = '*' AND address_domain = '$domain'" ) or
+                    $query = mysqli_query( $link, "SELECT * FROM mail_routing WHERE address_user = '*' AND address_domain = '$domain'" ) or
                         die( mysqli_error() );
                     $numrows = mysqli_num_rows( $query );
                     mysqli_free_result( $query );
                     if ( $numrows == 0 )
                     {
                         $msg = "The new domain was successfully added with a catch-all recipient for mail.";
-                        $query = mysqli_query( $link, "INSERT INTO virtual_aliases ( address_user, address_domain, recipient ) VALUES ( '*', '$domain', '$default_user' )" ) or
+                        $query = mysqli_query( $link, "INSERT INTO mail_routing ( address_user, address_domain, recipient ) VALUES ( '*', '$domain', '$default_user' )" ) or
                             die( mysqli_error() );
                     }
                 }
@@ -91,7 +91,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         {
             // Query the database to check for the domain's existence
             $domain = mysqli_real_escape_string( $link, $raw_domain );
-            $query = mysqli_query( $link, "SELECT * FROM virtual_domains WHERE name = '$domain'" ) or die( mysqli_error() );
+            $query = mysqli_query( $link, "SELECT * FROM hosted_domains WHERE name = '$domain'" ) or die( mysqli_error() );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
     
@@ -102,11 +102,11 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             else
             {
                 $msg = "The new domain was successfully deleted.";
-                mysqli_query( $link, "DELETE FROM virtual_domains WHERE name = '$domain'" ) or
+                mysqli_query( $link, "DELETE FROM hosted_domains WHERE name = '$domain'" ) or
                      die( mysqli_error() );
     
                 // Delete all mail routing entries for the domain, if any
-                mysqli_query( $link, "DELETE FROM virtual_aliases WHERE address_domain = '$domain'" );
+                mysqli_query( $link, "DELETE FROM mail_routing WHERE address_domain = '$domain'" );
             }
         }
     }
@@ -133,7 +133,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                 $default_user = '-';
             else
                 $default_user = mysqli_real_escape_string( $link, $raw_default_user );
-            $query = mysqli_query( $link, "SELECT * FROM virtual_domains WHERE name = '$domain'" ) or die( mysqli_error() );
+            $query = mysqli_query( $link, "SELECT * FROM hosted_domains WHERE name = '$domain'" ) or die( mysqli_error() );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
     
@@ -144,12 +144,12 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             else
             {
                 $msg = "The domain default user was successfully updated.";
-                mysqli_query( $link, "UPDATE virtual_domains SET default_user = '$default_user' WHERE name = '$domain'" ) or
+                mysqli_query( $link, "UPDATE hosted_domains SET default_user = '$default_user' WHERE name = '$domain'" ) or
                      die( mysqli_error() );
 
                 // Delete the catch-all routing entry for the domain if removing the default user
                 if ( $default_user == '-' )
-                    mysqli_query( $link, "DELETE FROM virtual_aliases WHERE address_user = '*' AND address_domain = '$domain'" );
+                    mysqli_query( $link, "DELETE FROM mail_routing WHERE address_user = '*' AND address_domain = '$domain'" );
             }
         }
     }
@@ -166,7 +166,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 <?php
     $wildcard_user = '-';
     // Find the global wildcard recipient if any
-    $query3 = mysqli_query( $link, "SELECT recipient FROM virtual_aliases WHERE address_user = '*' AND address_domain = '*'" ) or
+    $query3 = mysqli_query( $link, "SELECT recipient FROM mail_routing WHERE address_user = '*' AND address_domain = '*'" ) or
         die( mysqli_error() );
     if ( $cols3 = mysqli_fetch_array( $query3 ) )
     {
@@ -175,7 +175,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
     mysqli_free_result( $query3 );
 
     // Scan the domains table in sorted order
-    $query = mysqli_query( $link, "SELECT name FROM virtual_domains ORDER BY name" ) or
+    $query = mysqli_query( $link, "SELECT name FROM hosted_domains ORDER BY name" ) or
         die( mysqli_error() );
 
     // Output the body of our table of domains
@@ -185,7 +185,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
         if ( $domain != "" )
         {
             // Check default routing entry for the domain for a default recipient
-            $query2 = mysqli_query( $link, "SELECT recipient FROM virtual_aliases WHERE address_user = '*' AND address_domain = '$domain'" ) or
+            $query2 = mysqli_query( $link, "SELECT recipient FROM mail_routing WHERE address_user = '*' AND address_domain = '$domain'" ) or
                 die( mysqli_error() );
             $default_user = $wildcard_user;
             if ( $cols2 = mysqli_fetch_array( $query2 ) )
@@ -209,7 +209,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
     </p>
     
     <p>
-        <form method="POST" action="VirtualDomains.php">
+        <form method="POST" action="HostedDomains.php">
             <table class="entry">
                 <tr>
                     <td class="entry_label">Domain:</td>

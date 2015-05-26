@@ -30,11 +30,6 @@ echo "<title>".$title."</title>".PHP_EOL;
             <tr><th class="listing">Username</th><th class="listing">Type</th><th class="listing">UID</th><th class="listing">GID</th><th class="listing">Homedir</th></tr>
 <?php
     // Scan the domains table in sorted order
-    // SELECT u.username AS username, u.password AS password, u.acct_type AS acct_type,
-    //       IFNULL( a.uid, u.username ) AS uid, IFNULL( a.gid, u.username ) AS gid,
-    //       CONCAT( a.home_root, u.username) AS home
-    //     FROM virtual_users u, acct_types a
-    //     WHERE u.acct_type = a.code;
     $query = mysqli_query( $link, "SELECT username, acct_type, uid, gid, home FROM v_passwd ORDER BY username" ) or
         die( mysqli_error() );
 

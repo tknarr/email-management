@@ -37,7 +37,7 @@ echo "<title>".$title."</title>".PHP_EOL;
                 <td class="index"><a href="MailRouting.php">Mail routing entry management</a></td>
             </tr>
             <tr>
-                <td class="index"><a href="VirtualDomains.php">Virtual domain management</a></td>
+                <td class="index"><a href="HostedDomains.php">Hosted domain management</a></td>
             </tr>
             <tr>
                 <td class="index"><a href="ChangePassword.php">Password change form</a></td>

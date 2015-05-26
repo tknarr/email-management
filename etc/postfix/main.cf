@@ -53,8 +53,9 @@ smtpd_recipient_restrictions = reject_unknown_sender_domain,
     reject_unauth_destination,
     reject_rbl_client zen.spamhaus.org
 
-virtual_alias_domains = mysql:/etc/postfix/mysql-virtual-domains.cf
-virtual_alias_maps = mysql:/etc/postfix/mysql-virtual-aliases.cf
+virtual_alias_domains = mysql:/etc/postfix/mysql-hosted-domains.cf
+virtual_alias_maps = mysql:/etc/postfix/mysql-mail-routing.cf
+transport_maps = mysql:/etc/postfix/mysql-transports.cf
 
 myhostname = myhostname.mydomain
 alias_maps = hash:/etc/aliases

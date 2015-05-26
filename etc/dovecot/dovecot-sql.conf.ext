@@ -14,4 +14,4 @@ password_query = SELECT username AS user, password, home AS userdb_home, uid AS 
 
 user_query = SELECT home, uid, gid FROM v_passwd WHERE username = '%n'
 
-iterate_query = SELECT username AS user FROM virtual_users;
+iterate_query = SELECT username AS user FROM mail_users;

@@ -1,0 +1,5 @@
+user = mailuser
+password = changeme
+hosts = 127.0.0.1
+dbname = email
+query = SELECT transport FROM v_passwd WHERE username = '%u' AND 'mydomain' = '%d'

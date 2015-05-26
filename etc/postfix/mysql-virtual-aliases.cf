@@ -1,5 +1,0 @@
-user = mailuser
-password = changeme
-hosts = 127.0.0.1
-dbname = email
-query = SELECT retval FROM ( SELECT getVirtualAlias( '%u', '%d' ) AS retval ) t WHERE t.retval IS NOT NULL

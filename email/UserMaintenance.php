@@ -34,7 +34,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "GET" )
     if ( !empty( $raw_username ) && $logged_in_admin )
     {
         $username = mysqli_real_escape_string( $link, $raw_username );
-        $query = mysqli_query( $link, "UPDATE virtual_users SET change_attempts = 0 WHERE username = '$username'" ) or die( mysqli_error() );
+        $query = mysqli_query( $link, "UPDATE mail_users SET change_attempts = 0 WHERE username = '$username'" ) or die( mysqli_error() );
     }
 }
 // Check to see if the form has been submitted
@@ -73,7 +73,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
     
             // Query the database to check for the new user's existence
             $username = mysqli_real_escape_string( $link, $raw_username );
-            $query = mysqli_query( $link, "SELECT * FROM virtual_users WHERE username = '$username'" ) or die( mysqli_error() );
+            $query = mysqli_query( $link, "SELECT * FROM mail_users WHERE username = '$username'" ) or die( mysqli_error() );
             $numrows = mysqli_num_rows( $query );
     
             if ( $numrows != 0 )
@@ -108,19 +108,19 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                 else
                 {
                     $msg = "The new user was successfully added.";
-                    mysqli_query( $link, "INSERT INTO virtual_users ( username, password, acct_type ) VALUES ( '$username', '$hnpassword', '$accttype' )" ) or
+                    mysqli_query( $link, "INSERT INTO mail_users ( username, password, acct_type ) VALUES ( '$username', '$hnpassword', '$accttype' )" ) or
                          die( mysqli_error() );
     
                     if ( $all_domains == "yes" )
                     {
                         // When adding a new user and all-domains was checked, add a "user@* -> user" mail routing entry for them if one doesn't already exist
-                        $query = mysqli_query( $link, "SELECT * FROM virtual_aliases WHERE address_user = '$username' AND address_domain = '*'" ) or
+                        $query = mysqli_query( $link, "SELECT * FROM mail_routing WHERE address_user = '$username' AND address_domain = '*'" ) or
                             die( mysqli_error() );
                         $numrows = mysqli_num_rows( $query );
                         if ( $numrows == 0 )
                         {
                             $msg = "The new user was successfully added with an all-domains entry for mail.";
-                            $query = mysqli_query( $link, "INSERT INTO virtual_aliases ( address_user, address_domain, recipient ) VALUES ( '$username', '*', '$username' )" ) or
+                            $query = mysqli_query( $link, "INSERT INTO mail_routing ( address_user, address_domain, recipient ) VALUES ( '$username', '*', '$username' )" ) or
                                 die( mysqli_error() );
                         }
                     }
@@ -141,12 +141,12 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         {
             // Query the database to check for the user's existence
             $username = mysqli_real_escape_string( $link, $raw_username );
-            $query = mysqli_query( $link, "SELECT * FROM virtual_users WHERE username = '$username'" ) or die( mysqli_error() );
+            $query = mysqli_query( $link, "SELECT * FROM mail_users WHERE username = '$username'" ) or die( mysqli_error() );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
     
             // When deleting a user that's the target of a default mail routing entry for a domain, complain
-            $query = mysqli_query( $link, "SELECT * FROM virtual_aliases WHERE recipient = '$username' AND address_user = '*'" );
+            $query = mysqli_query( $link, "SELECT * FROM mail_routing WHERE recipient = '$username' AND address_user = '*'" );
             $numrows_domain = mysqli_num_rows( $query );
             mysqli_free_result( $query );
             
@@ -165,11 +165,11 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             else
             {
                 $msg = "The user was successfully deleted.";
-                mysqli_query( $link, "DELETE FROM virtual_users WHERE username = '$username'" ) or
+                mysqli_query( $link, "DELETE FROM mail_users WHERE username = '$username'" ) or
                      die( mysqli_error() );
     
                 // When deleting a user, delete any mail routing entries that specify them
-                mysqli_query( $link, "DELETE FROM virtual_aliases WHERE recipient = '$username'" ) or die( mysqli_error() );
+                mysqli_query( $link, "DELETE FROM mail_routing WHERE recipient = '$username'" ) or die( mysqli_error() );
             }
         }
     }
@@ -185,7 +185,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
             <tr><th class="listing">Username</th><th class="listing">Type</th><th class="listing">Change<br>attempts</th><th class="listing_extra">&nbsp;</th></tr>
 <?php
     // Scan the domains table in sorted order
-    $query = mysqli_query( $link, "SELECT username, change_attempts, a.abbreviation AS abbreviation FROM virtual_users, acct_types a WHERE acct_type = a.code ORDER BY username" ) or
+    $query = mysqli_query( $link, "SELECT username, change_attempts, a.abbreviation AS abbreviation FROM mail_users, acct_types a WHERE acct_type = a.code ORDER BY username" ) or
         die( mysqli_error() );
 
     // Output the body of our table of domains
@@ -242,7 +242,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
                 <tr>
                     <td class="entry_label">Virtual user?</td>
 <?php
-$ckd = $default_virtual_users ? "checked " : "";
+$ckd = $default_mail_users ? "checked " : "";
 echo "                    <td class=\"entry_value\"><input type=\"checkbox\" name=\"virtualuser\" value=\"yes\" ".$ckd."/></td>".PHP_EOL;
 ?>
                 </tr>

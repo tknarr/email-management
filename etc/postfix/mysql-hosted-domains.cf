@@ -2,4 +2,4 @@ user = mailuser
 password = changeme
 hosts = 127.0.0.1
 dbname = email
-query = SELECT 1 FROM virtual_domains WHERE name='%s'
+query = SELECT 1 FROM hosted_domains WHERE name='%s'

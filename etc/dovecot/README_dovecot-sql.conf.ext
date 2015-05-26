@@ -1,4 +1,4 @@
 Locate the following entry in the default dovecot-sql.conf.ext file and add this line
 immediately after it:
 
-    password_query = SELECT username AS user, password FROM virtual_users WHERE username = '%n'
+    password_query = SELECT username AS user, password FROM mail_users WHERE username = '%n'

@@ -63,7 +63,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         {
             // Query the database to find which user we're working with
             $username = mysqli_real_escape_string( $link, $raw_username );
-            $query = mysqli_query( $link, "SELECT username, password, change_attempts FROM virtual_users WHERE username = '$username'" ) or
+            $query = mysqli_query( $link, "SELECT username, password, change_attempts FROM mail_users WHERE username = '$username'" ) or
                              die( mysqli_error() );
             $numrows = mysqli_num_rows( $query );
             
@@ -97,7 +97,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                                  ( !$logged_in_admin || ( $logged_in_user == $dbusername ) ) )
                 {
                     $msg = "The CURRENT password you entered is incorrect.";
-                    mysqli_query( $link, "UPDATE virtual_users SET change_attempts = change_attempts + 1 where username = '$username'" );
+                    mysqli_query( $link, "UPDATE mail_users SET change_attempts = change_attempts + 1 where username = '$username'" );
                 }
                 elseif ( substr( $hnpassword, 0, 3 ) != "$6$" )
                 {
@@ -106,7 +106,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                 else
                 {
                     $msg = "Your password has been successfully changed.";
-                    mysqli_query( $link, "UPDATE virtual_users SET password = '$hnpassword', change_attempts = 0 WHERE username = '$username'" ) or
+                    mysqli_query( $link, "UPDATE mail_users SET password = '$hnpassword', change_attempts = 0 WHERE username = '$username'" ) or
                                      die( mysqli_error() );
                 }
             }

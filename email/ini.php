@@ -43,7 +43,7 @@ function validate_user( $l, $u, $p, $mt )
 {
     // Query the database to find the user's password
     $u_esc = mysqli_real_escape_string( $l, $u );
-    $query = mysqli_query( $l, "SELECT password, change_attempts FROM virtual_users WHERE username = '$u_esc'" ) or
+    $query = mysqli_query( $l, "SELECT password, change_attempts FROM mail_users WHERE username = '$u_esc'" ) or
                      die( mysqli_error() );
     // If user not found, fail
     $numrows = mysqli_num_rows( $query );
@@ -67,7 +67,7 @@ function validate_user( $l, $u, $p, $mt )
         // If passwords don't match or maximum tries exceeded, increment the tries counter and return a fail
     if ( $hp != $hpassword || $tries >= $mt )
     {
-        mysqli_query( $l, "UPDATE virtual_users SET change_attempts = change_attempts + 1 where username = '$u_esc'" );
+        mysqli_query( $l, "UPDATE mail_users SET change_attempts = change_attempts + 1 where username = '$u_esc'" );
         mysqli_commit( $l ) or die( "Database error." );
         return false;
     }
@@ -104,5 +104,5 @@ if ( !isset( $_SERVER ['PHP_AUTH_USER'] ) || !isset( $_SERVER ['PHP_AUTH_PW'] ) 
 $logged_in_user = $_SERVER ['PHP_AUTH_USER'];
 $logged_in_admin = is_admin( $admin_users, $logged_in_user );
 // Shorthand variable for default user type
-$default_virtual_users = ( $default_user_type == 'virtual' );
+$default_mail_users = ( $default_user_type == 'virtual' );
 ?>
