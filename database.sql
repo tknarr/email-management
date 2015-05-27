@@ -33,7 +33,7 @@ CREATE TABLE acct_types (
         home_root       VARCHAR(50) NOT NULL,
         uid             VARCHAR(20),
         gid             VARCHAR(20),
-        transport       VARCHAR(100) NOT NULL DEFAULT ''
+        transport       VARCHAR(100)
 );
 
 CREATE TABLE hosted_domains (
@@ -106,8 +106,8 @@ COMMIT;
 START TRANSACTION;
 
 INSERT INTO acct_types ( code, description, abbreviation, home_root, uid, gid ) VALUES
-        ( 'R', 'Root', 'Root', '/', NULL, NULL, '' ),
-        ( 'S', 'System user', 'Sys', '/home/', NULL, NULL, '' ),
+        ( 'R', 'Root', 'Root', '/', NULL, NULL, NULL ),
+        ( 'S', 'System user', 'Sys', '/home/', NULL, NULL, NULL ),
         ( 'V', 'Virtual user', '', '/home/vmail/', 'vmail', 'vmail', 'lmtp:unix:private/dovecot-lmtp' );
 
 INSERT INTO hosted_domains ( name ) VALUES
