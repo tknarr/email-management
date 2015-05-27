@@ -104,5 +104,5 @@ if ( !isset( $_SERVER ['PHP_AUTH_USER'] ) || !isset( $_SERVER ['PHP_AUTH_PW'] ) 
 $logged_in_user = $_SERVER ['PHP_AUTH_USER'];
 $logged_in_admin = is_admin( $admin_users, $logged_in_user );
 // Shorthand variable for default user type
-$default_mail_users = ( $default_user_type == 'virtual' );
+$default_virtual_users = ( $default_user_type == 'virtual' );
 ?>

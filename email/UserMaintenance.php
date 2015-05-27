@@ -242,7 +242,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
                 <tr>
                     <td class="entry_label">Virtual user?</td>
 <?php
-$ckd = $default_mail_users ? "checked " : "";
+$ckd = $default_virtual_users ? "checked " : "";
 echo "                    <td class=\"entry_value\"><input type=\"checkbox\" name=\"virtualuser\" value=\"yes\" ".$ckd."/></td>".PHP_EOL;
 ?>
                 </tr>
