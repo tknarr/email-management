@@ -44,7 +44,7 @@ function validate_user( $l, $u, $p, $mt )
     // Query the database to find the user's password
     $u_esc = mysqli_real_escape_string( $l, $u );
     $query = mysqli_query( $l, "SELECT password, change_attempts FROM mail_users WHERE username = '$u_esc'" ) or
-                     die( mysqli_error() );
+                     die( mysqli_error( $link ) );
     // If user not found, fail
     $numrows = mysqli_num_rows( $query );
     if ( $numrows == 0 )

@@ -35,7 +35,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "GET" )
 // Check to see if the form has been submitted
 if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
 {
-    if ( $_POST ['submit'] )
+    if ( isset( $_POST ['submit'] ) )
     {
         // Raw username, we'll escape it later
         $u = $_POST ['username'];
@@ -64,7 +64,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             // Query the database to find which user we're working with
             $username = mysqli_real_escape_string( $link, $raw_username );
             $query = mysqli_query( $link, "SELECT username, password, change_attempts FROM mail_users WHERE username = '$username'" ) or
-                             die( mysqli_error() );
+                             die( mysqli_error( $link ) );
             $numrows = mysqli_num_rows( $query );
             
             // Gather database information
@@ -107,7 +107,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                 {
                     $msg = "Your password has been successfully changed.";
                     mysqli_query( $link, "UPDATE mail_users SET password = '$hnpassword', change_attempts = 0 WHERE username = '$username'" ) or
-                                     die( mysqli_error() );
+                                     die( mysqli_error( $link ) );
                 }
             }
         }

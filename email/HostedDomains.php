@@ -30,7 +30,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
     {
         $msg = "You are not an administrator.";
     }
-    elseif ( $_POST[ 'add' ] )
+    elseif ( isset( $_POST[ 'add' ] ) )
     {
         // Raw new username, we'll escape it later
         $raw_domain = $_POST[ 'domain' ];
@@ -45,7 +45,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         {
             // Query the database to check for the new domain's existence
             $domain = mysqli_real_escape_string( $link, $raw_domain );
-            $query = mysqli_query( $link, "SELECT * FROM hosted_domains WHERE name = '$domain'" ) or die( mysqli_error() );
+            $query = mysqli_query( $link, "SELECT * FROM hosted_domains WHERE name = '$domain'" ) or die( mysqli_error( $link ) );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
     
@@ -57,27 +57,27 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             {
                 $msg = "The new domain was successfully added.";
                 mysqli_query( $link, "INSERT INTO hosted_domains ( name ) VALUES ( '$domain' )" ) or
-                     die( mysqli_error() );
+                     die( mysqli_error( $link ) );
 
                 if ( !empty( $raw_default_user ) )
                 {
                     // If a default user was given and no default mail routing exists for the domain, add one to that user
                     $default_user =  mysqli_real_escape_string( $link, $raw_default_user );
                     $query = mysqli_query( $link, "SELECT * FROM mail_routing WHERE address_user = '*' AND address_domain = '$domain'" ) or
-                        die( mysqli_error() );
+                        die( mysqli_error( $link ) );
                     $numrows = mysqli_num_rows( $query );
                     mysqli_free_result( $query );
                     if ( $numrows == 0 )
                     {
                         $msg = "The new domain was successfully added with a catch-all recipient for mail.";
                         $query = mysqli_query( $link, "INSERT INTO mail_routing ( address_user, address_domain, recipient ) VALUES ( '*', '$domain', '$default_user' )" ) or
-                            die( mysqli_error() );
+                            die( mysqli_error( $link ) );
                     }
                 }
             }
         }
     }
-    elseif ( $_POST[ 'delete' ] )
+    elseif ( isset( $_POST[ 'delete' ] ) )
     {
         // Raw new username, we'll escape it later
         $raw_domain = $_POST[ 'domain' ];
@@ -91,7 +91,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         {
             // Query the database to check for the domain's existence
             $domain = mysqli_real_escape_string( $link, $raw_domain );
-            $query = mysqli_query( $link, "SELECT * FROM hosted_domains WHERE name = '$domain'" ) or die( mysqli_error() );
+            $query = mysqli_query( $link, "SELECT * FROM hosted_domains WHERE name = '$domain'" ) or die( mysqli_error( $link ) );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
     
@@ -103,14 +103,14 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             {
                 $msg = "The new domain was successfully deleted.";
                 mysqli_query( $link, "DELETE FROM hosted_domains WHERE name = '$domain'" ) or
-                     die( mysqli_error() );
+                     die( mysqli_error( $link ) );
     
                 // Delete all mail routing entries for the domain, if any
                 mysqli_query( $link, "DELETE FROM mail_routing WHERE address_domain = '$domain'" );
             }
         }
     }
-    elseif ( $_POST[ 'update' ] )
+    elseif ( isset( $_POST[ 'update' ] ) )
     {
         // Raw new username, we'll escape it later
         $raw_domain = $_POST[ 'domain' ];
@@ -133,7 +133,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                 $default_user = '-';
             else
                 $default_user = mysqli_real_escape_string( $link, $raw_default_user );
-            $query = mysqli_query( $link, "SELECT * FROM hosted_domains WHERE name = '$domain'" ) or die( mysqli_error() );
+            $query = mysqli_query( $link, "SELECT * FROM hosted_domains WHERE name = '$domain'" ) or die( mysqli_error( $link ) );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
     
@@ -144,8 +144,6 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             else
             {
                 $msg = "The domain default user was successfully updated.";
-                mysqli_query( $link, "UPDATE hosted_domains SET default_user = '$default_user' WHERE name = '$domain'" ) or
-                     die( mysqli_error() );
 
                 // Delete the catch-all routing entry for the domain if removing the default user
                 if ( $default_user == '-' )
@@ -167,7 +165,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
     $wildcard_user = '-';
     // Find the global wildcard recipient if any
     $query3 = mysqli_query( $link, "SELECT recipient FROM mail_routing WHERE address_user = '*' AND address_domain = '*'" ) or
-        die( mysqli_error() );
+        die( mysqli_error( $link ) );
     if ( $cols3 = mysqli_fetch_array( $query3 ) )
     {
         $wildcard_user = $cols3[ 'recipient' ];
@@ -176,7 +174,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 
     // Scan the domains table in sorted order
     $query = mysqli_query( $link, "SELECT name FROM hosted_domains ORDER BY name" ) or
-        die( mysqli_error() );
+        die( mysqli_error( $link ) );
 
     // Output the body of our table of domains
     while ( $cols = mysqli_fetch_array( $query ) )
@@ -186,7 +184,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
         {
             // Check default routing entry for the domain for a default recipient
             $query2 = mysqli_query( $link, "SELECT recipient FROM mail_routing WHERE address_user = '*' AND address_domain = '$domain'" ) or
-                die( mysqli_error() );
+                die( mysqli_error( $link ) );
             $default_user = $wildcard_user;
             if ( $cols2 = mysqli_fetch_array( $query2 ) )
             {

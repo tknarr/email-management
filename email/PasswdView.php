@@ -31,7 +31,7 @@ echo "<title>".$title."</title>".PHP_EOL;
 <?php
     // Scan the domains table in sorted order
     $query = mysqli_query( $link, "SELECT username, acct_type, uid, gid, home FROM v_passwd ORDER BY username" ) or
-        die( mysqli_error() );
+        die( mysqli_error( $link ) );
 
     // Output the body of our table of domains
     while ( $cols = mysqli_fetch_array( $query ) )
