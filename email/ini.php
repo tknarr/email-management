@@ -1,6 +1,6 @@
 <?php
 // Copyright 2015 Todd Knarr
-// Licensed under the terms of the GPL v3.0
+// Licensed under the terms of the GPL v3.0 or any later version
 
 // Read settings from config file
 $ini_file = parse_ini_file( "/etc/email_management.ini" ) or die( "Error reading configuration." );

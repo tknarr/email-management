@@ -1,56 +1,17 @@
-Postfix/Dovecot basic e-mail management system installation
+Postfix/Dovecot e-mail system installation
     Copyright 2015 Todd Knarr
-    Licensed under the terms of the GPL v3.0
+    Licensed under the terms of the GPL v3.0 or any later version
+    See the LICENSE file for complete terms
+    
+I needed an e-mail setup where I could have users with a full shell account receive
+mail through the usual Unix process with mail under their home directory, .forward
+and procmail and such available, and so on. I also wanted to be able to set up
+email-only accounts for friends without having to give them a full Unix shell
+account they had no interest in in the process. I wanted it to be semi-automatic,
+and I wanted to be able to manage/maintain it mostly through a Web interface. This
+is the result. It uses MySQL for the database, Postfix and Dovecot for mail services,
+and PHP for the Web interface.
 
-This is the hybrid e-mail system I came up with for my domains. I wanted one that used
-a database for authentication, virtual domains and virtual aliases, but that still used
-system accounts for e-mail storage. I also wanted more flexibility in handling aliases,
-so I could say things like "mail to this username in all valid domains goes here" or
-"mail to any username in this domain that hasn't been more specifically handled goes to
-this catch-all user". I ended up with a MySQL database based on the one outlined in the
-"Email with Postfix, Dovecot and MySQL" guide with alterations to the virtual aliases
-table to split the address username and domain for routing, a stored procedure to handle
-stepping through the wildcard combinations in order and configuration files set up to
-reflect the use of system accounts rather than virtual users for mail delivery and
-storage.
-
-For this system you'll need Postfix, Dovecot and MySQL installed, plus the Web server
-of your choice set up with PHP installed and enabled.
-
-The "database.sql" file is an SQL script that does the setup needed to create a
-MySQL database named "email" and the users and tables needed for the e-mail routing
-system. It's got a section at the end to load some example data to show you how things
-look in the tables. The virtual domains table isn't critical to pre-load, you can set
-that up through the Web interface. The virtual aliases table is also not critical,
-though I recommend leaving all but the last 2 lines in. Those are the lines that route
-administrative usernames for all domains to matching local users, they don't depend on
-what domains you have and the usernames are relatively standard and expected to exist
-(or at least be routed to whoever handles those jobs) so it's good to have them set
-up. The entries that mention "example.com" you can safely delete, they're just there
-to show you how those types of entries work. The critical bit is the admin username
-in the virtual users table. You have to have an admin user and they have to have a
-password before you can use the Web interface. I have it set up for "root" with a
-simple initial password, the first thing you should do is change this through the
-Web interface and I recommend you change the plaintext password in the SQL script
-before running it just to be on the safe (paranoid) side. If you redirect root's
-e-mail to your regular username, change the admin username in the virtual users
-table to your regular username and do the same in "email_management.ini". Edit the
-"aliases" file to reflect your username, or if you don't want to route root's e-mail
-to a different user just comment that last line out.
- 
-The "email" folder contains the HTML and PHP pages for the management interface. You
-can just copy the "email" folder itself over underneath the document root of your server
-and it'll be ready to use. If you just go to "https://server/email/" you'll get the
-list of links for regular users (which right now is just one to change their password).
-"https://server/email/admin.html" will give you the list of links to tasks for the
-sysadmin to manage virtual domains, users and mail routing.
-
-The "etc" folder has the configuration files you'll need and reflects the tree based
-at /etc in the system. Some files, rather than being complete config files, are instructions
-on how to alter the default configuration files to reflect the correct settings for this
-system.
-
-To change the general appearance, you can mostly just edit the main.css stylesheet. I use
-logical rather than functional class names, so the centered page titles are done using
-class "page_title" rather than class "centered".
-
+The instructions are in the 'email-using-postfix-dovecot-mysql.md' document. I
+recommend also having a backup mailserver in case the primary's offline, and the
+document has instructions for that too.

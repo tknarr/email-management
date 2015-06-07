@@ -2,7 +2,7 @@
 <!DOCTYPE html>
 <!--
     Copyright 2015 Todd Knarr
-    Licensed under the terms of the GPL v3.0
+    Licensed under the terms of the GPL v3.0 or any later version
  -->
 <html>
 <head>
@@ -27,10 +27,17 @@ echo "<title>".$title."</title>".PHP_EOL;
 
     <p>
         <table class="listing">
-            <tr><th class="listing">Username</th><th class="listing">Type</th><th class="listing">UID</th><th class="listing">GID</th><th class="listing">Homedir</th></tr>
+            <tr>
+                <th class="listing">Username</th>
+                <th class="listing">Type</th>
+                <th class="listing">UID</th>
+                <th class="listing">GID</th>
+                <th class="listing">Homedir</th>
+                <th class="listing">Transport</th>
+            </tr>
 <?php
     // Scan the domains table in sorted order
-    $query = mysqli_query( $link, "SELECT username, acct_type, uid, gid, home FROM v_passwd ORDER BY username" ) or
+    $query = mysqli_query( $link, "SELECT username, acct_type, uid, gid, home, transport FROM v_passwd ORDER BY username" ) or
         die( mysqli_error( $link ) );
 
     // Output the body of our table of domains
@@ -41,15 +48,17 @@ echo "<title>".$title."</title>".PHP_EOL;
         $uid = $cols[ 'uid' ];
         $gid = $cols[ 'gid' ];
         $homedir = htmlspecialchars( $cols[ 'home' ] );
+        $transport = htmlspecialchars( $cols[ 'transport' ] );
 
         if ( $username != "" )
         {
             echo "            <tr>".PHP_EOL;
-            echo "              <td class=\"listing\">".$username."</td>".PHP_EOL;
-            echo "              <td class=\"listing\">".$acct_type."</td>".PHP_EOL;
-            echo "              <td class=\"listing\">".$uid."</td>".PHP_EOL;
-            echo "              <td class=\"listing\">".$gid."</td>".PHP_EOL;
-            echo "              <td class=\"listing\">".$homedir."</td>".PHP_EOL;
+            echo "                <td class=\"listing\">".$username."</td>".PHP_EOL;
+            echo "                <td class=\"listing\">".$acct_type."</td>".PHP_EOL;
+            echo "                <td class=\"listing\">".$uid."</td>".PHP_EOL;
+            echo "                <td class=\"listing\">".$gid."</td>".PHP_EOL;
+            echo "                <td class=\"listing\">".$homedir."</td>".PHP_EOL;
+            echo "                <td class=\"listing\">".$transport."</td>".PHP_EOL;
             echo "            </tr>".PHP_EOL;
         }
     }

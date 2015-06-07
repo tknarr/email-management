@@ -1,5 +1,5 @@
 -- Copyright 2015 Todd Knarr
--- Licensed under the terms of the GPL v3.0
+-- Licensed under the terms of the GPL v3.0 or any later version
 
 -- Create schema and users
 
