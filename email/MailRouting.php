@@ -89,7 +89,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         $raw_domain = $_POST ['domain'];
                                             
         // Validate the form fields
-        if ( empty( $raw_user ) || empty( $raw_domain ) || empty( $apassword ) )
+        if ( empty( $raw_user ) || empty( $raw_domain ) )
         {
             $msg = "User and domain are required.";
         }
