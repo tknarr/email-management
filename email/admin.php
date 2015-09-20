@@ -7,12 +7,13 @@
 <html>
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php
 if ( !empty( $org ) )
 {
     $title = htmlspecialchars( $org." e-mail system administration" );
 }
-else 
+else
 {
     $title = "E-mail system administration";
 }
@@ -24,7 +25,7 @@ echo "<title>".$title."</title>".PHP_EOL;
 <body>
 
 <?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL; ?>
-    
+
     <p>
         <table class="index">
             <tr>
@@ -44,7 +45,7 @@ echo "<title>".$title."</title>".PHP_EOL;
             </tr>
         </table>
     </p>
-    
+
 <?php if ( $logged_in_admin ) { ?>
     <p>
         <table class="container">
@@ -60,6 +61,6 @@ foreach ( $admin_users as $au )
 
 <?php } ?>
     <p class="footer"><a href="index.php">Return to home page</a></p>
-    
+
 </body>
 </html>

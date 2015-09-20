@@ -7,12 +7,13 @@
 <html>
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php
 if ( !empty( $org ) )
 {
     $title = htmlspecialchars( $org." e-mail hosted domains" );
 }
-else 
+else
 {
     $title = "E-mail hosted domains";
 }
@@ -35,7 +36,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         // Raw new username, we'll escape it later
         $raw_domain = $_POST[ 'domain' ];
         $raw_default_user = $_POST[ 'defaultuser' ];
-    
+
         // Validate the form fields
         if ( empty( $raw_domain ) )
         {
@@ -48,7 +49,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             $query = mysqli_query( $link, "SELECT * FROM hosted_domains WHERE name = '$domain'" ) or die( mysqli_error( $link ) );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
-    
+
             if ( $numrows != 0 )
             {
                 $msg = "This domain already exists.";
@@ -81,7 +82,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
     {
         // Raw new username, we'll escape it later
         $raw_domain = $_POST[ 'domain' ];
-    
+
         // Validate the form fields
         if ( empty( $raw_domain ) )
         {
@@ -94,7 +95,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             $query = mysqli_query( $link, "SELECT * FROM hosted_domains WHERE name = '$domain'" ) or die( mysqli_error( $link ) );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
-    
+
             if ( $numrows == 0 )
             {
                 $msg = "This domain does not exist.";
@@ -104,7 +105,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                 $msg = "The new domain was successfully deleted.";
                 mysqli_query( $link, "DELETE FROM hosted_domains WHERE name = '$domain'" ) or
                      die( mysqli_error( $link ) );
-    
+
                 // Delete all mail routing entries for the domain, if any
                 mysqli_query( $link, "DELETE FROM mail_routing WHERE address_domain = '$domain'" );
             }
@@ -115,7 +116,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         // Raw new username, we'll escape it later
         $raw_domain = $_POST[ 'domain' ];
         $raw_default_user = $_POST[ 'defaultuser' ];
-        
+
         // Validate the form fields
         if ( empty( $raw_domain ) )
         {
@@ -136,7 +137,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             $query = mysqli_query( $link, "SELECT * FROM hosted_domains WHERE name = '$domain'" ) or die( mysqli_error( $link ) );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
-    
+
             if ( $numrows == 0 )
             {
                 $msg = "This domain does not exist.";
@@ -205,7 +206,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 ?>
         </table>
     </p>
-    
+
     <p>
         <form method="POST" action="HostedDomains.php">
             <table class="entry">

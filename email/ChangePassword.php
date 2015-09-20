@@ -7,6 +7,7 @@
 <html>
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php
 if ( !empty( $org ) )
 {
@@ -45,7 +46,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         $password = $_POST ['password'];
         $npassword = $_POST ['npassword'];
         $rpassword = $_POST ['rpassword'];
-        
+
         // Validations that depend only on the raw formfields and don't require the database
         if ( empty( $raw_username ) || empty( $password ) || empty( $npassword ) || empty( $rpassword ) )
         {
@@ -66,7 +67,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             $query = mysqli_query( $link, "SELECT username, password, change_attempts FROM mail_users WHERE username = '$username'" ) or
                              die( mysqli_error( $link ) );
             $numrows = mysqli_num_rows( $query );
-            
+
             // Gather database information
             $tries = $max_tries;
             while ( $cols = mysqli_fetch_array( $query ) )
@@ -76,7 +77,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                 $tries = $cols ['change_attempts'];
             }
             mysqli_free_result( $query );
-            
+
             // Validation that requires the database
             if ( $numrows == 0 )
             {
@@ -86,12 +87,12 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             {
                 // Generate new SHA512 salt: 12 random bytes, base64-encoded to produce 16 characters
                 $nsalt = "$6$" . base64_encode( mcrypt_create_iv( 12 ) ) . "$";
-                
+
                 // Hash the old and new passwords
                 // This depends on a Linux-type crypt() implementation
                 $hpassword = crypt( $password, $dbpassword );
                 $hnpassword = crypt( $npassword, $nsalt );
-                
+
                 // Checks that have to be done after hashing passwords
                 if ( ( $hpassword != $dbpassword || $tries >= $max_tries ) &&
                                  ( !$logged_in_admin || ( $logged_in_user == $dbusername ) ) )
@@ -120,8 +121,8 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
 <?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL; ?>
 
     <p>
-    
-    
+
+
     <form method="POST" action="ChangePassword.php">
         <table class="entry">
             <tr>

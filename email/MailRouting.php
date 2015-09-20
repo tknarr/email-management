@@ -7,12 +7,13 @@
 <html>
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php
 if ( !empty( $org ) )
 {
     $title = htmlspecialchars( $org." e-mail routing" );
 }
-else 
+else
 {
     $title = "E-mail routing";
 }
@@ -53,7 +54,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         $raw_user = $_POST ['user'];
         $raw_domain = $_POST ['domain'];
         $raw_recipient = $_POST ['recipient'];
-                                            
+
         // Validate the form fields
         if ( empty( $raw_user ) || empty( $raw_domain ) || empty( $raw_recipient )  )
         {
@@ -68,7 +69,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                              die( mysqli_error( $link ) );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
-            
+
             if ( $numrows != 0 )
             {
                 $msg = "This mail routing entry already exists.";
@@ -87,7 +88,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         // Raw new user, domain, we'll escape them later
         $raw_user = $_POST ['user'];
         $raw_domain = $_POST ['domain'];
-                                            
+
         // Validate the form fields
         if ( empty( $raw_user ) || empty( $raw_domain ) )
         {
@@ -102,7 +103,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                              die( mysqli_error( $link ) );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
-            
+
             if ( $numrows == 0 )
             {
                 $msg = "This mail routing entry does not exist.";
@@ -121,7 +122,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
         $raw_user = $_POST ['user'];
         $raw_domain = $_POST ['domain'];
         $raw_recipient = $_POST ['recipient'];
-                                            
+
         // Validate the form fields
         if ( empty( $raw_user ) || empty( $raw_domain ) || empty( $raw_recipient )  )
         {
@@ -136,7 +137,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                              die( mysqli_error( $link ) );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
-            
+
             if ( $numrows == 0 )
             {
                 $msg = "This mail routing entry does not exist.";
@@ -190,14 +191,14 @@ mysqli_commit( $link ) or die( "Database commit failed." );
             }
         }
     }
-    
+
     function cmp_sysentry( $a, $b )
     {
         $o_t = strcmp( $a[1], $b[1] );
         $o_u = strcmp( $a[0], $b[0] );
         return ( $o_t == 0 ) ? $o_u : $o_t;
     }
-    
+
     function ttk_output_sysentry( $u, $r )
     {
         if ( $u && $r )
@@ -253,7 +254,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 ?>
         </table>
         </td>
-        
+
         <td class="container">
         <table class="listing">
             <caption>System aliases</caption>
@@ -291,7 +292,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 ?>
         </table>
         </td>
-        
+
         </tr>
         </table>
     </p>

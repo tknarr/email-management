@@ -7,12 +7,13 @@
 <html>
 <head>
 <meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 <?php
 if ( !empty( $org ) )
 {
     $title = htmlspecialchars( $org." e-mail user links" );
 }
-else 
+else
 {
     $title = "E-mail user links";
 }
