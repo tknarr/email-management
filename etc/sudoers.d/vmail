@@ -1,1 +1,1 @@
-www-data ALL = (ALL) NOPASSWD: /usr/local/bin/makevmaildir.sh
+www-data ALL = (vmail) NOPASSWD: /usr/local/bin/makevmaildir.sh

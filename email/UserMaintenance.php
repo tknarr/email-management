@@ -118,10 +118,16 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                     $msg = "The new user was successfully added.";
                     mysqli_query( $link, "INSERT INTO mail_users ( username, password, acct_type ) VALUES ( '$username', '$hnpassword', '$accttype' )" ) or
                          die( mysqli_error( $link ) );
-                    $o = shell_exec( 'sudo /usr/local/bin/makevmaildir.sh '.$raw_username );
-                    if ( $o != NULL )
+                    $op = [];
+                    $retval = 0;
+                    exec( '/usr/bin/sudo -u vmail /usr/local/bin/makevmaildir.sh '.$raw_username, $op, $retval );
+                    if ( $retval != 0 )
                     {
-                        $msg2 = "The mail directory was not created: ".$o;
+                        $msg2 = "The mail directory was not created:";
+                        foreach ( $op as $oline )
+                        {
+                            $msg2 = $msg2.'<br>'.PHP_EOL.htmlspecialchars( $oline );
+                        }
                     }
 
                     if ( $all_domains == "yes" )
@@ -132,10 +138,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                         $numrows = mysqli_num_rows( $query );
                         if ( $numrows == 0 )
                         {
-                            if ( $retval == 0 )
-                            {
-                                $msg = "The new user was successfully added with an all-domains entry for mail.";
-                            }
+                            $msg = "The new user was successfully added with an all-domains entry for mail.";
                             $query = mysqli_query( $link, "INSERT INTO mail_routing ( address_user, address_domain, recipient ) VALUES ( '$username', '*', '$username' )" ) or
                                 die( mysqli_error( $link ) );
                         }
@@ -273,7 +276,7 @@ echo "                    <td class=\"entry_value\"><input type=\"checkbox\" nam
     </p>
 
 <?php if ( $msg != "" ) echo "    <p class=\"message\">".$msg."</p>".PHP_EOL; ?>
-<?php if ( $msg2 != "" ) echo "    <p class=\"message\">2: ".$msg2."</p>".PHP_EOL; ?>
+<?php if ( $msg2 != "" ) echo "    <p class=\"message\">".$msg2."</p>".PHP_EOL; ?>
 
     <p class="footer"><a href="admin.php">Return to system administration links</a></p>
 
