@@ -5,13 +5,13 @@
 
 CREATE DATABASE email;
 
-CREATE USER 'mailadmin'@'127.0.0.1' IDENTIFIED BY 'changeme';
-REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'mailadmin'@'127.0.0.1';
-GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE on email.* TO 'mailadmin'@'127.0.0.1';
+CREATE USER 'mailadmin'@'localhost' IDENTIFIED BY 'changeme';
+REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'mailadmin'@'localhost';
+GRANT SELECT, INSERT, UPDATE, DELETE, EXECUTE on email.* TO 'mailadmin'@'localhost';
 
-CREATE USER 'mailuser'@'127.0.0.1' IDENTIFIED BY 'changeme';
-REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'mailuser'@'127.0.0.1';
-GRANT SELECT, EXECUTE on email.* TO 'mailuser'@'127.0.0.1';
+CREATE USER 'mailuser'@'localhost' IDENTIFIED BY 'changeme';
+REVOKE ALL PRIVILEGES, GRANT OPTION FROM 'mailuser'@'localhost';
+GRANT SELECT, EXECUTE on email.* TO 'mailuser'@'localhost';
 
 USE email;
 
@@ -105,7 +105,7 @@ COMMIT;
 
 START TRANSACTION;
 
-INSERT INTO acct_types ( code, description, abbreviation, home_root, uid, gid ) VALUES
+INSERT INTO acct_types ( code, description, abbreviation, home_root, uid, gid, transport ) VALUES
         ( 'R', 'Root', 'Root', '/', NULL, NULL, NULL ),
         ( 'S', 'System user', 'Sys', '/home/', NULL, NULL, NULL ),
         ( 'V', 'Virtual user', '', '/home/vmail/', 'vmail', 'vmail', 'lmtp:unix:private/dovecot-lmtp' );
@@ -127,6 +127,7 @@ INSERT INTO mail_routing ( address_user, address_domain, recipient ) VALUES
         ( '*',             'example.com', 'myusername' );
 
 INSERT INTO mail_users ( username, password, acct_type ) VALUES
-        ( 'root', ENCRYPT( 'changeme', CONCAT( '$6$', SUBSTRING( SHA( RAND() ), -16 ) ) ), 'R' );
+        ( 'root', ENCRYPT( 'changeme', CONCAT( '$6$', SUBSTRING( SHA( RAND() ), -16 ) ) ), 'R' ),
+        ( 'myusername', ENCRYPT( 'changeme', CONCAT( '$6$', SUBSTRING( SHA( RAND() ), -16 ) ) ), 'R' );
 
 COMMIT;
