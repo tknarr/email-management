@@ -99,7 +99,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             // Query the database to check for the new user's existence
             $user = mysqli_real_escape_string( $link, $raw_user );
             $domain = mysqli_real_escape_string( $link, $raw_domain );
-            $query = mysqli_query( $link, "SELECT * FROM mail_routing WHERE user = '$user' AND domain = '$domain'" ) or
+            $query = mysqli_query( $link, "SELECT * FROM mail_routing WHERE address_user = '$user' AND address_domain = '$domain'" ) or
                              die( mysqli_error( $link ) );
             $numrows = mysqli_num_rows( $query );
             mysqli_free_result( $query );
@@ -111,7 +111,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             else
             {
                 $msg = "The mail routing entry was successfully deleted.";
-                mysqli_query( $link, "DELETE FROM mail_routing WHERE user = '$user' AND domain = '$domain'" ) or
+                mysqli_query( $link, "DELETE FROM mail_routing WHERE address_user = '$user' AND address_domain = '$domain'" ) or
                                  die( mysqli_error( $link ) );
             }
         }
