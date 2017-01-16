@@ -33,6 +33,7 @@ do
             cp ${x} ${x}.old
             mv ${x}.new ${x}
             mv ${x}.new.db ${x}.db
+            systemctl restart postfix
         fi
     fi
 done
