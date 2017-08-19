@@ -6,40 +6,40 @@
  -->
 <html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php
-if ( !empty( $org ) )
-{
-    $title = htmlspecialchars( $org." password view of accounts" );
-}
-else
-{
-    $title = "Password view of accounts";
-}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php
+    if ( !empty( $org ) )
+    {
+        $title = htmlspecialchars( $org." password view of accounts" );
+    }
+    else
+    {
+        $title = "Password view of accounts";
+    }
 
-echo "<title>".$title."</title>".PHP_EOL;
-?>
-<link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
+    echo "<title>".$title."</title>".PHP_EOL;
+    ?>
+    <link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
 </head>
 
 <body>
 <?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL; ?>
 
-    <p>
-        <table class="listing">
-            <tr>
-                <th class="listing">Username</th>
-                <th class="listing">Type</th>
-                <th class="listing">UID</th>
-                <th class="listing">GID</th>
-                <th class="listing">Homedir</th>
-                <th class="listing">Transport</th>
-            </tr>
-<?php
+<p>
+<table class="listing">
+    <tr>
+        <th class="listing">Username</th>
+        <th class="listing">Type</th>
+        <th class="listing">UID</th>
+        <th class="listing">GID</th>
+        <th class="listing">Homedir</th>
+        <th class="listing">Transport</th>
+    </tr>
+    <?php
     // Scan the domains table in sorted order
     $query = mysqli_query( $link, "SELECT username, acct_type, uid, gid, home, transport FROM v_passwd ORDER BY username" ) or
-        die( mysqli_error( $link ) );
+    die( mysqli_error( $link ) );
 
     // Output the body of our table of domains
     while ( $cols = mysqli_fetch_array( $query ) )
@@ -64,13 +64,13 @@ echo "<title>".$title."</title>".PHP_EOL;
         }
     }
     mysqli_free_result( $query );
-?>
-        </table>
-    </p>
+    ?>
+</table>
+</p>
 
 <?php if ( $msg != "" ) echo "    <p class=\"message\">".$msg."</p>".PHP_EOL; ?>
 
-    <p class="footer"><a href="admin.php">Return to system administration links</a></p>
+<p class="footer"><a href="admin.php">Return to system administration links</a></p>
 
 </body>
 </html>

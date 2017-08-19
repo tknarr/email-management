@@ -6,21 +6,21 @@
  -->
 <html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php
-if ( !empty( $org ) )
-{
-    $title = htmlspecialchars( $org . " e-mail user password change" );
-}
-else
-{
-    $title = "E-mail user password change";
-}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php
+    if ( !empty( $org ) )
+    {
+        $title = htmlspecialchars( $org . " e-mail user password change" );
+    }
+    else
+    {
+        $title = "E-mail user password change";
+    }
 
-echo "<title>" . $title . "</title>" . PHP_EOL;
-?>
-<link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
+    echo "<title>" . $title . "</title>" . PHP_EOL;
+    ?>
+    <link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
 </head>
 
 <?php
@@ -65,7 +65,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             // Query the database to find which user we're working with
             $username = mysqli_real_escape_string( $link, $raw_username );
             $query = mysqli_query( $link, "SELECT username, password, change_attempts FROM mail_users WHERE username = '$username'" ) or
-                             die( mysqli_error( $link ) );
+            die( mysqli_error( $link ) );
             $numrows = mysqli_num_rows( $query );
 
             // Gather database information
@@ -95,7 +95,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
 
                 // Checks that have to be done after hashing passwords
                 if ( ( $hpassword != $dbpassword || $tries >= $max_tries ) &&
-                                 ( !$logged_in_admin || ( $logged_in_user == $dbusername ) ) )
+                    ( !$logged_in_admin || ( $logged_in_user == $dbusername ) ) )
                 {
                     $msg = "The CURRENT password you entered is incorrect.";
                     mysqli_query( $link, "UPDATE mail_users SET change_attempts = change_attempts + 1 where username = '$username'" );
@@ -108,7 +108,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                 {
                     $msg = "Your password has been successfully changed.";
                     mysqli_query( $link, "UPDATE mail_users SET password = '$hnpassword', change_attempts = 0 WHERE username = '$username'" ) or
-                                     die( mysqli_error( $link ) );
+                    die( mysqli_error( $link ) );
                 }
             }
         }
@@ -120,39 +120,39 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
 
 <?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL; ?>
 
-    <p>
+<p>
 
 
-    <form method="POST" action="ChangePassword.php">
-        <table class="entry">
-            <tr>
-                <td class="entry_label">Username:</td>
-<?php echo "                    <td class=\"entry_value\"><input type=\"text\" name=\"username\" value=\"".htmlspecialchars( $raw_username )."\" size=\"50\" /></td>".PHP_EOL; ?>
-                </tr>
-            <tr>
-                <td class="entry_label">Current Password:</td>
-                <td class="entry_value"><input type="password" name="password" value="" size="50" /></td>
-            </tr>
-            <tr>
-                <td class="entry_label">New Password:</td>
-                <td class="entry_value"><input type="password" name="npassword" value="" size="50" /></td>
-            </tr>
-            <tr>
-                <td class="entry_label">Repeat New Password:</td>
-                <td class="entry_value"><input type="password" name="rpassword" value="" size="50" /></td>
-            </tr>
-            <tr>
-                <td class="buttons"><input type="submit" name="submit" value="Change Password" /></td>
-            </tr>
-        </table>
-    </form>
-    </p>
+<form method="POST" action="ChangePassword.php">
+    <table class="entry">
+        <tr>
+            <td class="entry_label">Username:</td>
+            <?php echo "                    <td class=\"entry_value\"><input type=\"text\" name=\"username\" value=\"".htmlspecialchars( $raw_username )."\" size=\"50\" /></td>".PHP_EOL; ?>
+        </tr>
+        <tr>
+            <td class="entry_label">Current Password:</td>
+            <td class="entry_value"><input type="password" name="password" value="" size="50" /></td>
+        </tr>
+        <tr>
+            <td class="entry_label">New Password:</td>
+            <td class="entry_value"><input type="password" name="npassword" value="" size="50" /></td>
+        </tr>
+        <tr>
+            <td class="entry_label">Repeat New Password:</td>
+            <td class="entry_value"><input type="password" name="rpassword" value="" size="50" /></td>
+        </tr>
+        <tr>
+            <td class="buttons"><input type="submit" name="submit" value="Change Password" /></td>
+        </tr>
+    </table>
+</form>
+</p>
 
 <?php if ( $msg != "" ) echo "    <p class=\"message\">".$msg."</p>".PHP_EOL; ?>
 
-    <p class="footer">
-        <a href="admin.php">Return to system administration links</a>
-    </p>
+<p class="footer">
+    <a href="admin.php">Return to system administration links</a>
+</p>
 
 </body>
 </html>

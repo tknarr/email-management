@@ -6,21 +6,21 @@
  -->
 <html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php
-if ( !empty( $org ) )
-{
-    $title = htmlspecialchars( $org." e-mail hosted domains" );
-}
-else
-{
-    $title = "E-mail hosted domains";
-}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php
+    if ( !empty( $org ) )
+    {
+        $title = htmlspecialchars( $org." e-mail hosted domains" );
+    }
+    else
+    {
+        $title = "E-mail hosted domains";
+    }
 
-echo "<title>".$title."</title>".PHP_EOL;
-?>
-<link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
+    echo "<title>".$title."</title>".PHP_EOL;
+    ?>
+    <link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
 </head>
 
 <?php
@@ -58,21 +58,21 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             {
                 $msg = "The new domain was successfully added.";
                 mysqli_query( $link, "INSERT INTO hosted_domains ( name ) VALUES ( '$domain' )" ) or
-                     die( mysqli_error( $link ) );
+                die( mysqli_error( $link ) );
 
                 if ( !empty( $raw_default_user ) )
                 {
                     // If a default user was given and no default mail routing exists for the domain, add one to that user
                     $default_user =  mysqli_real_escape_string( $link, $raw_default_user );
                     $query = mysqli_query( $link, "SELECT * FROM mail_routing WHERE address_user = '*' AND address_domain = '$domain'" ) or
-                        die( mysqli_error( $link ) );
+                    die( mysqli_error( $link ) );
                     $numrows = mysqli_num_rows( $query );
                     mysqli_free_result( $query );
                     if ( $numrows == 0 )
                     {
                         $msg = "The new domain was successfully added with a catch-all recipient for mail.";
                         $query = mysqli_query( $link, "INSERT INTO mail_routing ( address_user, address_domain, recipient ) VALUES ( '*', '$domain', '$default_user' )" ) or
-                            die( mysqli_error( $link ) );
+                        die( mysqli_error( $link ) );
                     }
                 }
             }
@@ -104,7 +104,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             {
                 $msg = "The new domain was successfully deleted.";
                 mysqli_query( $link, "DELETE FROM hosted_domains WHERE name = '$domain'" ) or
-                     die( mysqli_error( $link ) );
+                die( mysqli_error( $link ) );
 
                 // Delete all mail routing entries for the domain, if any
                 mysqli_query( $link, "DELETE FROM mail_routing WHERE address_domain = '$domain'" );
@@ -159,14 +159,14 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 <body>
 <?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL; ?>
 
-    <p>
-        <table class="listing">
-            <tr><th class="listing">Domain name</th><th class="listing">Default user</th></tr>
-<?php
+<p>
+<table class="listing">
+    <tr><th class="listing">Domain name</th><th class="listing">Default user</th></tr>
+    <?php
     $wildcard_user = '-';
     // Find the global wildcard recipient if any
     $query3 = mysqli_query( $link, "SELECT recipient FROM mail_routing WHERE address_user = '*' AND address_domain = '*'" ) or
-        die( mysqli_error( $link ) );
+    die( mysqli_error( $link ) );
     if ( $cols3 = mysqli_fetch_array( $query3 ) )
     {
         $wildcard_user = $cols3[ 'recipient' ];
@@ -175,7 +175,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 
     // Scan the domains table in sorted order
     $query = mysqli_query( $link, "SELECT name FROM hosted_domains ORDER BY name" ) or
-        die( mysqli_error( $link ) );
+    die( mysqli_error( $link ) );
 
     // Output the body of our table of domains
     while ( $cols = mysqli_fetch_array( $query ) )
@@ -185,7 +185,7 @@ mysqli_commit( $link ) or die( "Database commit failed." );
         {
             // Check default routing entry for the domain for a default recipient
             $query2 = mysqli_query( $link, "SELECT recipient FROM mail_routing WHERE address_user = '*' AND address_domain = '$domain'" ) or
-                die( mysqli_error( $link ) );
+            die( mysqli_error( $link ) );
             $default_user = $wildcard_user;
             if ( $cols2 = mysqli_fetch_array( $query2 ) )
             {
@@ -203,35 +203,35 @@ mysqli_commit( $link ) or die( "Database commit failed." );
         }
     }
     mysqli_free_result( $query );
-?>
-        </table>
-    </p>
+    ?>
+</table>
+</p>
 
-    <p>
-        <form method="POST" action="HostedDomains.php">
-            <table class="entry">
-                <tr>
-                    <td class="entry_label">Domain:</td>
-                    <td class="entry_value"><input type="text" name="domain" value="" size="50" /></td>
-                </tr>
-                <tr>
-                    <td class="entry_label">Default user:</td>
-                    <td class="entry_value"><input type="text" name="defaultuser" value="" size="50" /></td>
-                </tr>
-                <tr>
-                    <td class="buttons">
-                        <input type="submit" name="add" value="Add" />
-                        <input type="submit" name="delete" value="Delete" />
-                        <input type="submit" name="update" value="Update" />
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </p>
+<p>
+<form method="POST" action="HostedDomains.php">
+    <table class="entry">
+        <tr>
+            <td class="entry_label">Domain:</td>
+            <td class="entry_value"><input type="text" name="domain" value="" size="50" /></td>
+        </tr>
+        <tr>
+            <td class="entry_label">Default user:</td>
+            <td class="entry_value"><input type="text" name="defaultuser" value="" size="50" /></td>
+        </tr>
+        <tr>
+            <td class="buttons">
+                <input type="submit" name="add" value="Add" />
+                <input type="submit" name="delete" value="Delete" />
+                <input type="submit" name="update" value="Update" />
+            </td>
+        </tr>
+    </table>
+</form>
+</p>
 
 <?php if ( $msg != "" ) echo "    <p class=\"message\">".$msg."</p>".PHP_EOL; ?>
 
-    <p class="footer"><a href="admin.php">Return to system administration links</a></p>
+<p class="footer"><a href="admin.php">Return to system administration links</a></p>
 
 </body>
 </html>

@@ -1,6 +1,20 @@
 <?php
-// Copyright 2015 Todd Knarr
-// Licensed under the terms of the GPL v3.0 or any later version
+/**
+ * Copyright (C) 2017 Todd Knarr <tknarr@silverglass.org>
+ */
+
+/**
+ * This program is free software: you can redistribute it and/or modify it under the
+ * terms of the GNU General Public License as published by the Free Software Foundation,
+ * either version 3 of the License, or (at your option) any later version.
+ *
+ * This program is distributed in the hope that it will be useful, but WITHOUT ANY
+ * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
+ * PARTICULAR PURPOSE. See the GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License along with this
+ * program. If not, see http://www.gnu.org/licenses/
+ */
 
 // Read settings from config file
 $ini_file = parse_ini_file( "/etc/email_management.ini" ) or die( "Error reading configuration." );
@@ -44,7 +58,7 @@ function validate_user( $l, $u, $p, $mt )
     // Query the database to find the user's password
     $u_esc = mysqli_real_escape_string( $l, $u );
     $query = mysqli_query( $l, "SELECT password, change_attempts FROM mail_users WHERE username = '$u_esc'" ) or
-                     die( mysqli_error( $link ) );
+    die( mysqli_error( $link ) );
     // If user not found, fail
     $numrows = mysqli_num_rows( $query );
     if ( $numrows == 0 )
@@ -59,12 +73,12 @@ function validate_user( $l, $u, $p, $mt )
     // Check for problems with correct password hash
     if ( !$hpassword || substr( $hpassword, 0, 3 ) != "$6$" )
         return false;
-        // Hashed form of entered password
+    // Hashed form of entered password
     $hp = crypt( $p, $hpassword );
     if ( substr( $hp, 0, 3 ) != "$6$" )
         return false;
-        
-        // If passwords don't match or maximum tries exceeded, increment the tries counter and return a fail
+
+    // If passwords don't match or maximum tries exceeded, increment the tries counter and return a fail
     if ( $hp != $hpassword || $tries >= $mt )
     {
         mysqli_query( $l, "UPDATE mail_users SET change_attempts = change_attempts + 1 where username = '$u_esc'" );
@@ -94,7 +108,7 @@ mysqli_autocommit( $link, FALSE );
 
 // Run our user authentication, fail if the browser isn't sending credentials or the password validation fails
 if ( !isset( $_SERVER ['PHP_AUTH_USER'] ) || !isset( $_SERVER ['PHP_AUTH_PW'] ) ||
-     !validate_user( $link, $_SERVER ['PHP_AUTH_USER'], $_SERVER ['PHP_AUTH_PW'], $max_tries ) )
+    !validate_user( $link, $_SERVER ['PHP_AUTH_USER'], $_SERVER ['PHP_AUTH_PW'], $max_tries ) )
 {
     header( 'WWW-Authenticate: Basic realm="EMail Admin System"' );
     header( 'HTTP/1.0 401 Unauthorized' );

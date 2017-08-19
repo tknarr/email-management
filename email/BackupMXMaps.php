@@ -54,10 +54,10 @@ if ( $backup_mx_token == '' || $magic_token == '' || $magic_token != $backup_mx_
 if ( $map_name == 'relay_domains' )
 {
     header( 'Content-Type: text/plain' );
-    
+
     // Connect to the database
     $link = mysqli_connect( $db_host, $db_user, $db_password, $db_database ) or die( mysqli_connect_error() );
-    
+
     // Scan the domains table in sorted order
     $query = mysqli_query( $link, "SELECT name FROM hosted_domains ORDER BY name" ) or die( mysqli_error( $link ) );
     // Output the body of our table of domains
@@ -73,10 +73,10 @@ if ( $map_name == 'relay_domains' )
 elseif ( $map_name == 'relay_recipients' )
 {
     header( 'Content-Type: text/plain' );
-    
+
     // Connect to the database
     $link = mysqli_connect( $db_host, $db_user, $db_password, $db_database ) or die( mysqli_connect_error() );
-    
+
     // Build an array of hosted domains
     $domain_list = array();
     $query = mysqli_query( $link, "SELECT name FROM hosted_domains ORDER BY name" ) or die( mysqli_error( $link ) );
@@ -88,7 +88,7 @@ elseif ( $map_name == 'relay_recipients' )
             $domain_list [] = $domain;
         }
     }
-    
+
     // Scan mail routing table for user entries, outputting entries and expanding domains as needed
     $q = "SELECT address_user, address_domain FROM mail_routing WHERE address_user != '*' ORDER BY address_user, address_domain";
     $query = mysqli_query( $link, $q ) or die( mysqli_error( $link ) );

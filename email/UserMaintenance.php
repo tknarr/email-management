@@ -6,21 +6,21 @@
  -->
 <html>
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<?php
-if ( !empty( $org ) )
-{
-    $title = htmlspecialchars( $org." e-mail user maintenance" );
-}
-else
-{
-    $title = "E-mail user maintenance";
-}
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php
+    if ( !empty( $org ) )
+    {
+        $title = htmlspecialchars( $org." e-mail user maintenance" );
+    }
+    else
+    {
+        $title = "E-mail user maintenance";
+    }
 
-echo "<title>".$title."</title>".PHP_EOL;
-?>
-<link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
+    echo "<title>".$title."</title>".PHP_EOL;
+    ?>
+    <link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
 </head>
 
 <?php
@@ -117,7 +117,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                 {
                     $msg = "The new user was successfully added.";
                     mysqli_query( $link, "INSERT INTO mail_users ( username, password, acct_type ) VALUES ( '$username', '$hnpassword', '$accttype' )" ) or
-                         die( mysqli_error( $link ) );
+                    die( mysqli_error( $link ) );
                     $op = [];
                     $retval = 0;
                     exec( '/usr/bin/sudo -u vmail /usr/local/bin/makevmaildir.sh '.$raw_username, $op, $retval );
@@ -134,13 +134,13 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
                     {
                         // When adding a new user and all-domains was checked, add a "user@* -> user" mail routing entry for them if one doesn't already exist
                         $query = mysqli_query( $link, "SELECT * FROM mail_routing WHERE address_user = '$username' AND address_domain = '*'" ) or
-                            die( mysqli_error( $link ) );
+                        die( mysqli_error( $link ) );
                         $numrows = mysqli_num_rows( $query );
                         if ( $numrows == 0 )
                         {
                             $msg = "The new user was successfully added with an all-domains entry for mail.";
                             $query = mysqli_query( $link, "INSERT INTO mail_routing ( address_user, address_domain, recipient ) VALUES ( '$username', '*', '$username' )" ) or
-                                die( mysqli_error( $link ) );
+                            die( mysqli_error( $link ) );
                         }
                     }
                 }
@@ -185,7 +185,7 @@ if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
             {
                 $msg = "The user was successfully deleted.";
                 mysqli_query( $link, "DELETE FROM mail_users WHERE username = '$username'" ) or
-                     die( mysqli_error( $link ) );
+                die( mysqli_error( $link ) );
 
                 // When deleting a user, delete any mail routing entries that specify them
                 mysqli_query( $link, "DELETE FROM mail_routing WHERE recipient = '$username'" ) or die( mysqli_error( $link ) );
@@ -199,13 +199,13 @@ mysqli_commit( $link ) or die( "Database commit failed." );
 <body>
 <?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL; ?>
 
-    <p>
-        <table class="listing">
-            <tr><th class="listing">Username</th><th class="listing">Type</th><th class="listing">Change<br>attempts</th><th class="listing_extra">&nbsp;</th></tr>
-<?php
+<p>
+<table class="listing">
+    <tr><th class="listing">Username</th><th class="listing">Type</th><th class="listing">Change<br>attempts</th><th class="listing_extra">&nbsp;</th></tr>
+    <?php
     // Scan the domains table in sorted order
     $query = mysqli_query( $link, "SELECT username, change_attempts, a.abbreviation AS abbreviation FROM mail_users, acct_types a WHERE acct_type = a.code ORDER BY username" ) or
-        die( mysqli_error( $link ) );
+    die( mysqli_error( $link ) );
 
     // Output the body of our table of domains
     while ( $cols = mysqli_fetch_array( $query ) )
@@ -235,50 +235,50 @@ mysqli_commit( $link ) or die( "Database commit failed." );
         }
     }
     mysqli_free_result( $query );
-?>
-        </table>
-    </p>
+    ?>
+</table>
+</p>
 
-    <p>
-        <form method="POST" action="UserMaintenance.php">
-            <table class="entry">
-                <tr>
-                    <td class="entry_label">Username:</td>
-                    <td class="entry_value"><input type="text" pattern="[A-Za-z0-9_.]+" name="username" value="" size="50" /></td>
-                </tr>
-                <tr>
-                    <td class="entry_label">Password:</td>
-                    <td class="entry_value"><input type="password" name="npassword" value="" size="50" /></td>
-                </tr>
-                <tr>
-                    <td class="entry_label">Repeat Password:</td>
-                    <td class="entry_value"><input type="password" name="rpassword" value="" size="50" /></td>
-                </tr>
-                <tr>
-                    <td class="entry_label">All domains?</td>
-                    <td class="entry_value"><input type="checkbox" name="alldomains" value="yes" /></td>
-                </tr>
-                <tr>
-                    <td class="entry_label">Virtual user?</td>
-<?php
-$ckd = $default_virtual_users ? "checked " : "";
-echo "                    <td class=\"entry_value\"><input type=\"checkbox\" name=\"virtualuser\" value=\"yes\" ".$ckd."/></td>".PHP_EOL;
-?>
-                </tr>
-                <tr>
-                    <td class="buttons">
-                        <input type="submit" name="add" value="Add" />
-                        <input type="submit" name="delete" value="Delete" />
-                    </td>
-                </tr>
-            </table>
-        </form>
-    </p>
+<p>
+<form method="POST" action="UserMaintenance.php">
+    <table class="entry">
+        <tr>
+            <td class="entry_label">Username:</td>
+            <td class="entry_value"><input type="text" pattern="[A-Za-z0-9_.]+" name="username" value="" size="50" /></td>
+        </tr>
+        <tr>
+            <td class="entry_label">Password:</td>
+            <td class="entry_value"><input type="password" name="npassword" value="" size="50" /></td>
+        </tr>
+        <tr>
+            <td class="entry_label">Repeat Password:</td>
+            <td class="entry_value"><input type="password" name="rpassword" value="" size="50" /></td>
+        </tr>
+        <tr>
+            <td class="entry_label">All domains?</td>
+            <td class="entry_value"><input type="checkbox" name="alldomains" value="yes" /></td>
+        </tr>
+        <tr>
+            <td class="entry_label">Virtual user?</td>
+            <?php
+            $ckd = $default_virtual_users ? "checked " : "";
+            echo "                    <td class=\"entry_value\"><input type=\"checkbox\" name=\"virtualuser\" value=\"yes\" ".$ckd."/></td>".PHP_EOL;
+            ?>
+        </tr>
+        <tr>
+            <td class="buttons">
+                <input type="submit" name="add" value="Add" />
+                <input type="submit" name="delete" value="Delete" />
+            </td>
+        </tr>
+    </table>
+</form>
+</p>
 
 <?php if ( $msg != "" ) echo "    <p class=\"message\">".$msg."</p>".PHP_EOL; ?>
 <?php if ( $msg2 != "" ) echo "    <p class=\"message\">".$msg2."</p>".PHP_EOL; ?>
 
-    <p class="footer"><a href="admin.php">Return to system administration links</a></p>
+<p class="footer"><a href="admin.php">Return to system administration links</a></p>
 
 </body>
 </html>
