@@ -6,25 +6,23 @@
  -->
 <html>
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php
-    if ( !empty( $org ) )
-    {
-        $title = htmlspecialchars( $org." e-mail system administration" );
+    if ( !empty( $org ) ) {
+        $title = htmlspecialchars( $org . " e-mail system administration" );
     }
-    else
-    {
+    else {
         $title = "E-mail system administration";
     }
 
-    echo "<title>".$title."</title>".PHP_EOL;
+    echo "<title>" . $title . "</title>" . PHP_EOL;
     ?>
-    <link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
+    <link href="main.css" rel="stylesheet" type="text/css" title="Standard styles"/>
 </head>
 <body>
 
-<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL; ?>
+<?php echo "    <h1 class=\"page_title\">" . $title . "</h1>" . PHP_EOL; ?>
 
 <p>
 <table class="index">
@@ -49,11 +47,12 @@
 <?php if ( $logged_in_admin ) { ?>
     <p>
     <table class="container">
-        <tr><th class="container">Admin users:</th></tr>
+        <tr>
+            <th class="container">Admin users:</th>
+        </tr>
         <?php
-        foreach ( $admin_users as $au )
-        {
-            echo "            <tr><td class=\"container\">".htmlspecialchars( $au )."</td></tr>".PHP_EOL;
+        foreach ( $admin_users as $au ) {
+            echo "            <tr><td class=\"container\">" . htmlspecialchars( $au ) . "</td></tr>" . PHP_EOL;
         }
         ?>
     </table>

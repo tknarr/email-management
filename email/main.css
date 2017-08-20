@@ -5,162 +5,162 @@
 */
 
 body {
-        background-color: #eeeeee;
-        color: #000033;
-        font-family: "Trebuchet MS", "Arial", sans-serif;
-        font-weight: normal;
+    background-color: #eeeeee;
+    color: #000033;
+    font-family: "Trebuchet MS", "Arial", sans-serif;
+    font-weight: normal;
 }
 
 a {
-        background-color: #eeeeee;
-        color: #003366;
-        text-decoration: none;
+    background-color: #eeeeee;
+    color: #003366;
+    text-decoration: none;
 }
 
 a:visited {
-        color: #336699;
+    color: #336699;
 }
 
 a:hover {
-        color: #cd0a0a;
+    color: #cd0a0a;
 }
 
 a:active {
-        color: #cd0a0a;
+    color: #cd0a0a;
 }
 
 a:focus {
-        color: #cd0a0a;
+    color: #cd0a0a;
 }
 
 h1.page_title {
-        text-align: center;
+    text-align: center;
 }
 
 p.message {
-        text-align: center;
+    text-align: center;
 }
 
 p.footer {
-        text-align: center;
+    text-align: center;
 }
 
 table {
-        border-collapse: collapse;
+    border-collapse: collapse;
 }
 
 table, th, td {
-        border: 1px solid black;
+    border: 1px solid black;
 }
 
 table caption {
-        border: 1px black;
-        border-style: solid solid none solid;
-        border-collapse: collapse;
-        padding: 5px;
-        background-color: #d3d3d3;
-        text-align: center;
-        font-weight: bold;
+    border: 1px black;
+    border-style: solid solid none solid;
+    border-collapse: collapse;
+    padding: 5px;
+    background-color: #d3d3d3;
+    text-align: center;
+    font-weight: bold;
 }
 
 th, td {
-        padding: 5px;
+    padding: 5px;
 }
 
 th {
-        background-color: #d3d3d3;
-        vertical-align: bottom;
+    background-color: #d3d3d3;
+    vertical-align: bottom;
 }
 
 table.index {
-        margin: auto;
+    margin: auto;
 }
 
 th.index, td.index {
-        text-align: center;
+    text-align: center;
 }
 
 table.listing {
-        margin: 0 auto;
+    margin: 0 auto;
 }
 
 th.listing {
-        text-align: left;
+    text-align: left;
 }
 
 th.listing_extra {
-        text-align: left;
-        border-style: hidden hidden hidden none;
-        background-color: initial;
+    text-align: left;
+    border-style: hidden hidden hidden none;
+    background-color: initial;
 }
 
 td.listing {
-        text-align: left;
+    text-align: left;
 }
 
 td.listing_right {
-        text-align: right;
+    text-align: right;
 }
 
 td.listing_extra {
-        text-align: left;
-        border-style: hidden hidden hidden none;
+    text-align: left;
+    border-style: hidden hidden hidden none;
 }
 
 td.listing_sys {
-        text-align: left;
+    text-align: left;
 }
 
 td.listing_syserror {
-        text-align: left;
-        color: #cd0a0a;
-        font-style: italic;
+    text-align: left;
+    color: #cd0a0a;
+    font-style: italic;
 }
 
 table.container {
-        margin: auto;
+    margin: auto;
 }
 
 table.container, th.container, td.container {
-        border: none
+    border: none
 }
 
 th.container, td.container {
-        padding: 1px 10px;
+    padding: 1px 10px;
 }
 
 th.container {
-        background-color: #eeeeee;
+    background-color: #eeeeee;
 }
 
 td.container {
-        vertical-align: top;
+    vertical-align: top;
 }
 
 .wildcard {
-        color: #cd0a0a;
+    color: #cd0a0a;
 }
 
 table.entry {
-        margin: 0 auto;
+    margin: 0 auto;
 }
 
 th.entry {
-        text-align: left;
+    text-align: left;
 }
 
 td.entry_label {
-        text-align: right;
+    text-align: right;
 }
 
 td.entry_value {
-        text-align: left;
+    text-align: left;
 }
 
 td.buttons {
-        text-align: left;
+    text-align: left;
 }
 
 form.buttons {
-        display: inline;
+    display: inline;
 }

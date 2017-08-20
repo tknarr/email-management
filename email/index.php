@@ -3,7 +3,7 @@
 
 <html>
 <head>
-    <meta charset="UTF-8" />
+    <meta charset="UTF-8"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <?php
     /**
@@ -18,27 +18,24 @@
      * This program is distributed in the hope that it will be useful, but WITHOUT ANY
      * WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR A
      * PARTICULAR PURPOSE. See the GNU General Public License for more details.
-     *
      * You should have received a copy of the GNU General Public License along with this
      * program. If not, see http://www.gnu.org/licenses/
      */
 
-    if ( !empty( $org ) )
-    {
-        $title = htmlspecialchars( $org." e-mail user links" );
+    if ( !empty( $org ) ) {
+        $title = htmlspecialchars( $org . " e-mail user links" );
     }
-    else
-    {
+    else {
         $title = "E-mail user links";
     }
 
-    echo "<title>".$title."</title>".PHP_EOL;
+    echo "<title>" . $title . "</title>" . PHP_EOL;
     ?>
-    <link href="main.css" rel="stylesheet" type="text/css" title="Standard styles" />
+    <link href="main.css" rel="stylesheet" type="text/css" title="Standard styles"/>
 </head>
 <body>
 
-<?php echo "    <h1 class=\"page_title\">".$title."</h1>".PHP_EOL; ?>
+<?php echo "    <h1 class=\"page_title\">" . $title . "</h1>" . PHP_EOL; ?>
 
 <p>
 <table class="index">
