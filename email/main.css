@@ -1,8 +1,7 @@
 @CHARSET "UTF-8";
 /*
-    Copyright 2015 Todd Knarr
-    Licensed under the terms of the GPL v3.0 or any later version
-*/
+ * Copyright (C) 2017 Todd Knarr <tknarr@silverglass.org>
+ */
 
 body {
     background-color: #eeeeee;

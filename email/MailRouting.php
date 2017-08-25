@@ -1,4 +1,4 @@
-<?php require 'ini.php'; ?>
+<?php require 'authenticate.php'; ?>
 <!DOCTYPE html>
 <!--
     Copyright 2015 Todd Knarr
@@ -44,7 +44,7 @@ if ( $_SERVER[ 'REQUEST_METHOD' ] == "GET" )
 // Check to see if the form has been submitted
 if ( $_SERVER ['REQUEST_METHOD'] == "POST" )
 {
-    if ( !$logged_in_admin )
+    if ( !$logged_in_as_admin )
     {
         $msg = "You are not an administrator.";
     }
