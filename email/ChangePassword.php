@@ -33,7 +33,6 @@ if ($_SERVER ['REQUEST_METHOD'] == 'GET') {
 // Check to see if the form has been submitted
 if ($_SERVER ['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST ['submit'])) {
-        // Raw username, we'll escape it later
         $u = $_POST ['username'];
         $username = filter_var($u, FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH);
         // Collect the old and new password fields
@@ -42,7 +41,6 @@ if ($_SERVER ['REQUEST_METHOD'] == 'POST') {
         $new_password = $_POST ['npassword'];
         $confirm_password = $_POST ['rpassword'];
 
-        // Validations that depend only on the raw formfields and don't require the database
         if (empty($username) || empty($password) || empty($new_password) || empty($confirm_password)) {
             $msg = "All fields are required.";
         } else if ($new_password != $confirm_password) {
@@ -71,8 +69,8 @@ if ($_SERVER ['REQUEST_METHOD'] == 'POST') {
             <td class="entry_label">Username:</td>
             <td class="entry_value">
                 <?php if ($logged_in_as_admin) { ?>
-                    <input type="text" name="username" value="<?= htmlspecialchars($username) ?>" size="50"
-                           title="Username"/>
+                    <input type="text" pattern="[A-Za-z0-9_.]+" name="username" value="<?= htmlspecialchars($username) ?>"
+                           size="50" title="Username"/>
                 <?php } else { ?>
                     <input type="hidden" name="username"
                            value="<?= $logged_in_user->getUsername() ?>"/><?= $logged_in_user->getUsername() ?>

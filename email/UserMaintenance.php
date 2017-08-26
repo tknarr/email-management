@@ -40,10 +40,9 @@ if ($_SERVER ['REQUEST_METHOD'] == 'GET') {
 }
 
 // Form submission
-if ($_SERVER ['REQUEST_METHOD'] == "POST") {
+if ($_SERVER ['REQUEST_METHOD'] == 'POST') {
     if (isset($_POST['add'])) {
         $across_all_domains = false;
-        // Raw new username, we'll escape it later
         $username =
             filter_var($_POST['username'], FILTER_SANITIZE_STRING, FILTER_FLAG_STRIP_LOW | FILTER_FLAG_STRIP_HIGH);
         if (isset($_POST['alldomains'])) {
@@ -71,7 +70,7 @@ if ($_SERVER ['REQUEST_METHOD'] == "POST") {
             $msg = "The new passwords do not match.";
         } else {
             $new_user = new User($username);
-            if ($new_user->userExists()) {
+            if ($new_user->exists()) {
                 $msg = "This username already exists.";
             } else {
                 $account_type = 'S';
@@ -81,11 +80,10 @@ if ($_SERVER ['REQUEST_METHOD'] == "POST") {
                     $account_type = 'V';
                 }
 
-                $status = User::create($username, $new_password, $account_type, $across_all_domains, $msg, $maildir_msg);
+                User::create($username, $new_password, $account_type, $across_all_domains, $msg, $maildir_msg);
             }
         }
     } else if (isset($_POST['delete'])) {
-        // Raw new username, we'll escape it later
         $username = $_POST['username'];
 
         if (empty($username)) {
@@ -193,10 +191,10 @@ if ($_SERVER ['REQUEST_METHOD'] == "POST") {
 </form>
 
 <?php if (!empty($msg)) { ?>
-    <p class="message"><?= $msg ?></p>
+    <p class="message"><?= htmlspecialchars($msg) ?></p>
 <?php } ?>
 <?php if (!empty($maildir_msg)) { ?>
-    <p class="message"><?= $maildir_msg ?></p>
+    <p class="message"><?= htmlspecialchars($maildir_msg) ?></p>
 <?php } ?>
 
 <p class="footer"><a href="admin.php">Return to system administration links</a></p>

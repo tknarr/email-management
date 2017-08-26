@@ -8,19 +8,31 @@
  */
 class Config
 {
+    /** @var null|Config */
     private static $instance = null;
 
+    /** @var string */
     private $organization;
+    /** @var bool */
     private $defaultVirtualUsers;
+    /** @var string */
     private $dbHostname;
+    /** @var string */
     private $dbDatabase;
+    /** @var string */
     private $dbUsername;
+    /** @var string */
     private $dbPassword;
+    /** @var mysqli */
     private $databaseLink;
+    /** @var string[] */
     private $adminUsers;
+    /** @var int */
     private $maxAuthenticationTries;
+    /** @var int */
     private $maxPasswordChangeTries;
 
+    /** @var string */
     private $backupMXToken;
 
     /**
@@ -147,7 +159,7 @@ class Config
     }
 
     /**
-     * @return array[string]
+     * @return string[]
      */
     public function getAdminUsers()
     {

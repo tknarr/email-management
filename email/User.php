@@ -8,6 +8,7 @@
  */
 class User
 {
+    /** @var string */
     private $username;
 
     /**
@@ -31,7 +32,7 @@ class User
     /**
      * @return bool
      */
-    public function userExists()
+    public function exists()
     {
         $link = Config::instance()->getDatabaseLink();
         $username_esc = mysqli_real_escape_string($link, $this->username);
@@ -40,7 +41,7 @@ class User
         $numrows = mysqli_num_rows($query);
         mysqli_free_result($query);
 
-        return $numrows != 0;
+        return $numrows > 0;
     }
 
     /**
