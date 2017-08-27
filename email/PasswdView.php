@@ -58,12 +58,12 @@ if (!$logged_in_as_admin) {
         $transport = htmlspecialchars($cols['transport']);
         ?>
         <tr>
-            <td class=\"listing\"><?= $username ?></td>
-            <td class=\"listing\"><?= $account_type ?></td>
-            <td class=\"listing\"><?= $uid ?></td>
-            <td class=\"listing\"><?= $gid ?></td>
-            <td class=\"listing\"><?= $home_directory ?></td>
-            <td class=\"listing\"><?= $transport ?></td>
+            <td class="listing"><?= $username ?></td>
+            <td class="listing"><?= $account_type ?></td>
+            <td class="listing"><?= $uid ?></td>
+            <td class="listing"><?= $gid ?></td>
+            <td class="listing"><?= $home_directory ?></td>
+            <td class="listing"><?= $transport ?></td>
         </tr>
         <?php
     }
