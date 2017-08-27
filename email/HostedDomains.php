@@ -74,8 +74,6 @@ if ($_SERVER ['REQUEST_METHOD'] == 'POST') {
         }
     }
 }
-
-mysqli_commit($link) or die("Database commit failed.");
 ?>
 
 <body>

@@ -1,5 +1,5 @@
     Postfix/Dovecot e-mail system installation
-    Copyright 2015 Todd Knarr
+    Copyright 2017 Todd Knarr
     Licensed under the terms of the GPL v3.0 or any later version
     See the LICENSE file for complete terms
     

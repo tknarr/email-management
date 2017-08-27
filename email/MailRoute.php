@@ -56,6 +56,68 @@ class MailRoute
     }
 
     /**
+     * @return bool
+     */
+    public function exists()
+    {
+        $link = Config::instance()->getDatabaseLink();
+        $address_user_esc = mysqli_real_escape_string($link, $this->addressUser);
+        $address_domain_esc = mysqli_real_escape_string($link, $this->addressDomain);
+        $query = mysqli_query($link,
+            "SELECT * FROM mail_routing WHERE address_user = '$address_user_esc' AND address_domain = '$address_domain_esc'")
+        or die(mysqli_error($link));
+        $numrows = mysqli_num_rows($query);
+        mysqli_free_result($query);
+
+        return $numrows > 0;
+    }
+
+    /**
+     * @param string $recipient
+     * @param string $result_message
+     *
+     * @return bool
+     */
+    public function update($recipient, &$result_message)
+    {
+        if (empty($recipient)) {
+            $result_message = "Mail routing entry must have a recipient.";
+            return false;
+        }
+
+        $link = Config::instance()->getDatabaseLink();
+        $address_user_esc = mysqli_real_escape_string($link, $this->addressUser);
+        $address_domain_esc = mysqli_real_escape_string($link, $this->addressDomain);
+        $recipient_esc = mysqli_real_escape_string($link, $recipient);
+
+        mysqli_query($link,
+            "UPDATE mail_routing SET recipient = '$recipient_esc' WHERE address_user = '$address_user_esc' AND address_domain = '$address_domain_esc'")
+        or die(mysqli_error($link));
+        $result_message = "Mail routing entry updated successfully.";
+
+        return true;
+    }
+
+    /**
+     * @param string $result_message
+     *
+     * @return bool
+     */
+    public function delete(&$result_message)
+    {
+        $link = Config::instance()->getDatabaseLink();
+        $address_user_esc = mysqli_real_escape_string($link, $this->addressUser);
+        $address_domain_esc = mysqli_real_escape_string($link, $this->addressDomain);
+
+        mysqli_query($link,
+            "DELETE FROM mail_routing WHERE address_user = '$address_user_esc' AND address_domain = '$address_domain_esc'")
+        or die(mysqli_error($link));
+        $result_message = "Mail routing entry successfully deleted.";
+
+        return true;
+    }
+
+    /**
      * Get mail routing list in an order matching how entries will be checked during actual mail routing
      *
      * @return MailRoute[]
@@ -137,5 +199,34 @@ class MailRoute
         mysqli_free_result($query);
 
         return $result;
+    }
+
+    /**
+     * @param string $address_user
+     * @param string $address_domain
+     * @param string $recipient
+     * @param string $result_message
+     *
+     * @return bool
+     */
+    public static function create($address_user, $address_domain, $recipient, &$result_message)
+    {
+        if (empty($recipient)) {
+            $result_message = "Mail routing entry must have a recipient.";
+
+            return false;
+        }
+
+        $link = Config::instance()->getDatabaseLink();
+        $address_user_esc = mysqli_real_escape_string($link, $address_user);
+        $address_domain_esc = mysqli_real_escape_string($link, $address_domain);
+        $recipient_esc = mysqli_real_escape_string($link, $recipient);
+
+        mysqli_query($link,
+            "INSERT INTO mail_routing ( address_user, address_domain, recipient ) VALUES ( '$address_user_esc', '$address_domain_esc', '$recipient_esc' )")
+        or die(mysqli_error($link));
+        $result_message = "Mail routing entry successfully added.";
+
+        return true;
     }
 }
